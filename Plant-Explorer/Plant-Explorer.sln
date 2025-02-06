@@ -1,9 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer", "Plant-Explorer.csproj", "{6F365D4E-33B7-4AE4-A07D-6417B049CB7C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Web", "1.Web", "{242BEEE4-9641-4584-9A75-874C3B9B263A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Service", "2.Service", "{095A44CA-7B11-4BC0-AF67-7A1DBC71860F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Repository", "3.Repository", "{D3AE5057-CCA0-4EFD-8D41-AC041B7F4252}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Core", "4.Core", "{35F9B8BB-037F-44B5-A3D5-398EAA2B6978}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Core", "..\Plant-Explorer.Core\Plant-Explorer.Core.csproj", "{E5992A05-7F73-4050-84D0-E7F3446C39BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Mapper", "..\Plant-Explorer.Mapper\Plant-Explorer.Mapper.csproj", "{B641C07A-226D-4338-8A48-8F40EEFB3413}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Contract.Repositories", "..\Plant-Explorer.Contract.Repositories\Plant-Explorer.Contract.Repositories.csproj", "{BE436E26-1B64-4B14-BC99-82EA0C62372D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Repositories", "..\Plant-Explorer.Repositories\Plant-Explorer.Repositories.csproj", "{F5771959-0F27-4C70-A3AC-DBE5F9A2A913}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Contract.Services", "..\Plant-Explorer.Contract.Services\Plant-Explorer.Contract.Services.csproj", "{B49BE585-7308-43A5-864F-A55F01D6AC8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Services", "..\Plant-Explorer.Services\Plant-Explorer.Services.csproj", "{74D3F862-2435-42ED-8E2E-1A194EF36931}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +35,41 @@ Global
 		{6F365D4E-33B7-4AE4-A07D-6417B049CB7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F365D4E-33B7-4AE4-A07D-6417B049CB7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F365D4E-33B7-4AE4-A07D-6417B049CB7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5992A05-7F73-4050-84D0-E7F3446C39BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5992A05-7F73-4050-84D0-E7F3446C39BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5992A05-7F73-4050-84D0-E7F3446C39BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5992A05-7F73-4050-84D0-E7F3446C39BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B641C07A-226D-4338-8A48-8F40EEFB3413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B641C07A-226D-4338-8A48-8F40EEFB3413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B641C07A-226D-4338-8A48-8F40EEFB3413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B641C07A-226D-4338-8A48-8F40EEFB3413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE436E26-1B64-4B14-BC99-82EA0C62372D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE436E26-1B64-4B14-BC99-82EA0C62372D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE436E26-1B64-4B14-BC99-82EA0C62372D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE436E26-1B64-4B14-BC99-82EA0C62372D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5771959-0F27-4C70-A3AC-DBE5F9A2A913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5771959-0F27-4C70-A3AC-DBE5F9A2A913}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5771959-0F27-4C70-A3AC-DBE5F9A2A913}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5771959-0F27-4C70-A3AC-DBE5F9A2A913}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B49BE585-7308-43A5-864F-A55F01D6AC8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B49BE585-7308-43A5-864F-A55F01D6AC8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B49BE585-7308-43A5-864F-A55F01D6AC8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B49BE585-7308-43A5-864F-A55F01D6AC8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74D3F862-2435-42ED-8E2E-1A194EF36931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74D3F862-2435-42ED-8E2E-1A194EF36931}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74D3F862-2435-42ED-8E2E-1A194EF36931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74D3F862-2435-42ED-8E2E-1A194EF36931}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6F365D4E-33B7-4AE4-A07D-6417B049CB7C} = {242BEEE4-9641-4584-9A75-874C3B9B263A}
+		{E5992A05-7F73-4050-84D0-E7F3446C39BA} = {35F9B8BB-037F-44B5-A3D5-398EAA2B6978}
+		{B641C07A-226D-4338-8A48-8F40EEFB3413} = {35F9B8BB-037F-44B5-A3D5-398EAA2B6978}
+		{BE436E26-1B64-4B14-BC99-82EA0C62372D} = {D3AE5057-CCA0-4EFD-8D41-AC041B7F4252}
+		{F5771959-0F27-4C70-A3AC-DBE5F9A2A913} = {D3AE5057-CCA0-4EFD-8D41-AC041B7F4252}
+		{B49BE585-7308-43A5-864F-A55F01D6AC8F} = {095A44CA-7B11-4BC0-AF67-7A1DBC71860F}
+		{74D3F862-2435-42ED-8E2E-1A194EF36931} = {095A44CA-7B11-4BC0-AF67-7A1DBC71860F}
 	EndGlobalSection
 EndGlobal
