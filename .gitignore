@@ -1,0 +1,29 @@
+# Ignore build output directories
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet packages (you can restore these via NuGet)
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# Log files and temporary files
+*.log
+*.tmp
+*.*~
+
+# VS Code settings (if you're using VS Code)
+.vscode/
+
+# Publish output
+publish/
+
+# Optional: Ignore appsettings files (if they contain sensitive data)
+**/appsettings*.json
