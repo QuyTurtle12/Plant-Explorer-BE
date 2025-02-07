@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer", "Plant-Explorer.csproj", "{6F365D4E-33B7-4AE4-A07D-6417B049CB7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer", "Plant-Explorer\Plant-Explorer.csproj", "{6F365D4E-33B7-4AE4-A07D-6417B049CB7C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Web", "1.Web", "{242BEEE4-9641-4584-9A75-874C3B9B263A}"
 EndProject
@@ -13,17 +13,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Repository", "3.Repositor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Core", "4.Core", "{35F9B8BB-037F-44B5-A3D5-398EAA2B6978}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Core", "..\Plant-Explorer.Core\Plant-Explorer.Core.csproj", "{E5992A05-7F73-4050-84D0-E7F3446C39BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Core", "Plant-Explorer.Core\Plant-Explorer.Core.csproj", "{E5992A05-7F73-4050-84D0-E7F3446C39BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Mapper", "..\Plant-Explorer.Mapper\Plant-Explorer.Mapper.csproj", "{B641C07A-226D-4338-8A48-8F40EEFB3413}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Mapper", "Plant-Explorer.Mapper\Plant-Explorer.Mapper.csproj", "{B641C07A-226D-4338-8A48-8F40EEFB3413}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Contract.Repositories", "..\Plant-Explorer.Contract.Repositories\Plant-Explorer.Contract.Repositories.csproj", "{BE436E26-1B64-4B14-BC99-82EA0C62372D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Contract.Repositories", "Plant-Explorer.Contract.Repositories\Plant-Explorer.Contract.Repositories.csproj", "{BE436E26-1B64-4B14-BC99-82EA0C62372D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Repositories", "..\Plant-Explorer.Repositories\Plant-Explorer.Repositories.csproj", "{F5771959-0F27-4C70-A3AC-DBE5F9A2A913}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Repositories", "Plant-Explorer.Repositories\Plant-Explorer.Repositories.csproj", "{F5771959-0F27-4C70-A3AC-DBE5F9A2A913}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Contract.Services", "..\Plant-Explorer.Contract.Services\Plant-Explorer.Contract.Services.csproj", "{B49BE585-7308-43A5-864F-A55F01D6AC8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Contract.Services", "Plant-Explorer.Contract.Services\Plant-Explorer.Contract.Services.csproj", "{B49BE585-7308-43A5-864F-A55F01D6AC8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Services", "..\Plant-Explorer.Services\Plant-Explorer.Services.csproj", "{74D3F862-2435-42ED-8E2E-1A194EF36931}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plant-Explorer.Services", "Plant-Explorer.Services\Plant-Explorer.Services.csproj", "{74D3F862-2435-42ED-8E2E-1A194EF36931}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
