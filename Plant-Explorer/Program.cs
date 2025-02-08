@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.DI;
 using Plant_Explorer.Middleware;
@@ -26,6 +27,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 }).AddEntityFrameworkStores<PlantExplorerDbContext>()
 .AddDefaultTokenProviders();
 
+// Configure DbContext with connection string from appsettings.json
+builder.Services.AddDbContext<PlantExplorerDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
 var app = builder.Build();
 
 app.UseSwagger();
