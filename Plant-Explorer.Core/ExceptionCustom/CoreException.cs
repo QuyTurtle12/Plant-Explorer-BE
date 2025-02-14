@@ -43,7 +43,7 @@ namespace Plant_Explorer.Core.ExceptionCustom
 
         public ErrorDetail ErrorDetail { get; }
 
-        public ErrorException(int statusCode, string errorCode, string message)
+        public ErrorException(int statusCode, string errorCode, string message) : base(message)
         {
             StatusCode = statusCode;
             ErrorDetail = new ErrorDetail
@@ -53,7 +53,7 @@ namespace Plant_Explorer.Core.ExceptionCustom
             };
         }
 
-        public ErrorException(int statusCode, ErrorDetail errorDetail)
+        public ErrorException(int statusCode, ErrorDetail errorDetail) : base(errorDetail.ErrorMessage?.ToString())
         {
             StatusCode = statusCode;
             ErrorDetail = errorDetail;

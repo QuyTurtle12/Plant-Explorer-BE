@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Plant-Explorer.Core\Plant-Explorer.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ModelViews\UserModel\" />
-  </ItemGroup>
-
 </Project>

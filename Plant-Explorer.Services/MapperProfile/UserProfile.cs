@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Plant_Explorer.Contract.Repositories.Entity;
+using Plant_Explorer.Contract.Repositories.ModelViews.UserModel;
 
 namespace Plant_Explorer.Services.MapperProfile
 {
@@ -7,10 +8,7 @@ namespace Plant_Explorer.Services.MapperProfile
     {
         public UserProfile()
         {
-            //CreateMap<ApplicationUser, CreateStaffModel>().ReverseMap();
-            //CreateMap<ApplicationUser, CreateOwnerModel>().ReverseMap();
-            //CreateMap<ApplicationUser, ResponseUserModel>().ReverseMap();
-            //CreateMap<ApplicationUser, ResponseStaffModel>().ReverseMap();
+            CreateMap<ApplicationUser, GetUserModel>().ReverseMap();
         }
     }
 }
