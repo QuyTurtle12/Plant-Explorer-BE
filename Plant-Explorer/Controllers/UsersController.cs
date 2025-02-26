@@ -47,5 +47,95 @@ namespace Plant_Explorer.Controllers
                  message: "Finished"
                 ));
         }
+
+        /// <summary>
+        /// Get 1 user profile
+        /// </summary>
+        /// <param name="id">User Id</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("user")]
+        public async Task<IActionResult> GetUserProfile(string id)
+        {
+            GetUserModel result = await _userService.GetUserProfileAsync(id);
+            return Ok(new BaseResponseModel<GetUserModel>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                data: result,
+                additionalData: null,
+                message: "Finished"
+                ));
+        }
+
+        /// <summary>
+        /// Create a new child
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("children")]
+        public async Task<IActionResult> CreateChildren(PostUserModel newUser)
+        {
+            newUser.RoleName = "Children";
+            await _userService.CreateUserAsync(newUser);
+            return Ok(new BaseResponseModel<PostUserModel>(
+                statusCode: StatusCodes.Status201Created,
+                code: ResponseCodeConstants.SUCCESS,
+                message: "Create a new child successfully"
+                ));
+        }
+
+        /// <summary>
+        /// Create a new staff
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("staff")]
+        public async Task<IActionResult> CreateStaff(PostUserModel newUser)
+        {
+            newUser.RoleName = "Staff";
+            await _userService.CreateUserAsync(newUser);
+            return Ok(new BaseResponseModel<PostUserModel>(
+                statusCode: StatusCodes.Status201Created,
+                code: ResponseCodeConstants.SUCCESS,
+                message: "Create a new staff successfully"
+                ));
+        }
+
+        /// <summary>
+        /// Update a user
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <param name="updatedUser">new info</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("user")]
+        public async Task<IActionResult> UpdateEmail(string id, PutUserModel updatedUser)
+        {
+            await _userService.UpdateUserAsync(id, updatedUser);
+            return Ok(new BaseResponseModel<PostUserModel>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                message: "Update a user successfully"
+                ));
+        }
+
+        /// <summary>
+        /// Delete a user
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("user")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            await _userService.DeleteUserAsync(id);
+            return Ok(new BaseResponseModel<PostUserModel>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                message: "Delete a user successfully"
+                ));
+        }
     }
 }
