@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Plant_Explorer.Contract.Repositories.Interface;
+using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Repositories.Repositories;
+using Plant_Explorer.Services.Services;
 
 namespace Plant_Explorer.Services
 {
@@ -31,10 +33,8 @@ namespace Plant_Explorer.Services
 
         public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddScoped<ITokenService, TokenService>();
-            //services.AddScoped<IAuthService, AuthService>();
-            
-
+            services.AddScoped<IUserService, UserService>();
+            //..
         }
     }
 }

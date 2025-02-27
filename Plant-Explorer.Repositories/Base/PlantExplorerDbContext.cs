@@ -174,6 +174,70 @@ namespace Plant_Explorer.Repositories.Base
                     .HasForeignKey(o => o.QuestionId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
+
+            // Plant - FavoritePlant (One-to-many)
+            builder.Entity<Plant>(b =>
+            {
+                b.HasMany(p => p.FavoritePlants)
+                    .WithOne(fp => fp.Plant)
+                    .HasForeignKey(fp => fp.PlantId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // FavoritePlant - ApplicationUser (One-to-many)
+            builder.Entity<FavoritePlant>(b =>
+            {
+                b.HasOne(fp => fp.User)
+                    .WithMany(u => u.FavoritePlants)
+                    .HasForeignKey(fp => fp.UserId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // Plant - PlantCharacteristic (One-to-many)
+            builder.Entity<Plant>(b =>
+            {
+                b.HasMany(p => p.PlantCharacteristics)
+                    .WithOne(pc => pc.Plant)
+                    .HasForeignKey(fp => fp.PlantId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // PlantCharacteristic - CharacteristicCategory (One-to-many)
+            builder.Entity<PlantCharacteristic>(b =>
+            {
+                b.HasOne(pc => pc.CharacteristicCategory)
+                    .WithMany(cc => cc.PlantCharacteristics)
+                    .HasForeignKey(pc => pc.CharacteristicCategoryId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // Plant - PlantApplication (One-to-many)
+            builder.Entity<Plant>(b =>
+            {
+                b.HasMany(p => p.PlantApplications)
+                    .WithOne(pc => pc.Plant)
+                    .HasForeignKey(fp => fp.PlantId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // PlantApplication - ApplicationCategory (One-to-many)
+            builder.Entity<PlantApplication>(b =>
+            {
+                b.HasOne(pa => pa.ApplicationCategory)
+                    .WithMany(ac => ac.PlantApplications)
+                    .HasForeignKey(pa => pa.ApplicationCategoryId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // Plant - PlantImage (One-to-many)
+            builder.Entity<Plant>(b =>
+            {
+                b.HasMany(p => p.PlantImages)
+                    .WithOne(pi => pi.Plant)
+                    .HasForeignKey(pi => pi.PlantId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
         }
     }
 }
