@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Plant_Explorer</RootNamespace>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <UserSecretsId>0366ac14-f5e8-4b01-8f86-55a3380acf69</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>

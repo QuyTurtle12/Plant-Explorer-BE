@@ -3,6 +3,9 @@ using Plant_Explorer.Services.Infrastructure;
 
 namespace Plant_Explorer.Middleware
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PermissionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
@@ -19,15 +22,15 @@ namespace Plant_Explorer.Middleware
         {
             _next = next;
             _logger = logger;
-        //    _excludedUris = new()
-        //{
-        //    { "GET", new List<string>() { "/api/auth/google-code", "/api/payment/vnpay-callback", "/api/orderdetails" } },
-        //    { "POST", new List<string>() { "/api/auth/login", "/api/auth/active-account", "/api/auth/forgot-password", "/api/auth/check-valid-code", "/api/auth/reset-password", "/api/auth/login-google", "/api/auth/create-customer" } },
-        //    { "PUT", new List<string>() {  } },
-        //    { "PATCH", new List<string>() {  } },
-        //    { "DELETE", new List<string>() {  } },
-        //    { "CONTROLLER", new List<string>() { "/api/foods", "/api/categoriesfoods", "/api/auth", "/api/menus" } }
-        //};
+            _excludedUris = new()
+            {
+                    { "GET", new List<string>() { "/api/users" } }
+                //    { "POST", new List<string>() { "/api/auth/login", "/api/auth/active-account", "/api/auth/forgot-password", "/api/auth/check-valid-code", "/api/auth/reset-password", "/api/auth/login-google", "/api/auth/create-customer" } },
+                //    { "PUT", new List<string>() {  } },
+                //    { "PATCH", new List<string>() {  } },
+                //    { "DELETE", new List<string>() {  } },
+                //    { "CONTROLLER", new List<string>() { "/api/foods", "/api/categoriesfoods", "/api/auth", "/api/menus" } }
+            };
             //    _rolePermissions = new()
             //{
             //    {

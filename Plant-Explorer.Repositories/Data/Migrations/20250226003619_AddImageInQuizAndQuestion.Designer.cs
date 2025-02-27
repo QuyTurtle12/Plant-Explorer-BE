@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Plant_Explorer.Repositories.Base;
 
@@ -11,9 +12,11 @@ using Plant_Explorer.Repositories.Base;
 namespace Plant_Explorer.Repositories.Data.Migrations
 {
     [DbContext(typeof(PlantExplorerDbContext))]
-    partial class PlantExplorerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250226003619_AddImageInQuizAndQuestion")]
+    partial class AddImageInQuizAndQuestion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,9 +155,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -325,9 +325,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Avatars");
@@ -363,9 +360,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
@@ -406,9 +400,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -446,9 +437,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -513,9 +501,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<Guid>("QuestionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
@@ -565,9 +550,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.Property<string>("ScientificName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -659,12 +641,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<Guid>("QuizId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("imageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("QuizId");
@@ -698,12 +674,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("imageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -821,9 +791,6 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("Rank")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Status")
                         .HasColumnType("int");
 
                     b.Property<Guid>("UserId")

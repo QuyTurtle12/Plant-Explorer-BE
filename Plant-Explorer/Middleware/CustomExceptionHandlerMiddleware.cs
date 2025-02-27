@@ -4,6 +4,9 @@ using Plant_Explorer.Core.ExceptionCustom;
 
 namespace Plant_Explorer.Middleware
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CustomExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;

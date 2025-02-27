@@ -16,6 +16,7 @@ namespace Plant_Explorer.Contract.Repositories.Base
         [Key]
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public int? Status { get; set; } = 1;
         public string? CreatedBy { get; set; }
         public string? LastUpdatedBy { get; set; }
         public string? DeletedBy { get; set; }

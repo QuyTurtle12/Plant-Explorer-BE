@@ -4,6 +4,7 @@ using Plant_Explorer.Contract.Repositories.Base;
 using Plant_Explorer.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using System.Reflection;
 
 namespace Plant_Explorer.DI
 {
@@ -125,9 +126,14 @@ namespace Plant_Explorer.DI
                     Title = "API"
 
                 });
-                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                //c.IncludeXmlComments(xmlPath);
+
+                // Get the XML comment file path
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                // Include the XML comments
+                c.IncludeXmlComments(xmlPath);
+
                 // Thêm JWT Bearer Token vào Swagger
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
