@@ -111,7 +111,7 @@ namespace Plant_Explorer.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("user")]
-        public async Task<IActionResult> UpdateEmail(string id, PutUserModel updatedUser)
+        public async Task<IActionResult> UpdateUser(string id, PutUserModel updatedUser)
         {
             await _userService.UpdateUserAsync(id, updatedUser);
             return Ok(new BaseResponseModel<PostUserModel>(
