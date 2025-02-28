@@ -222,6 +222,12 @@ namespace Plant_Explorer.Services.Infrastructure
 
         public static async Task HandleForbiddenRequest(HttpContext context)
         {
+            if (context.Response.HasStarted)
+            {
+                return;
+            }
+            context.Response.Clear();
+
             int code = (int)HttpStatusCode.Forbidden;
             var error = new ErrorException(code, ResponseCodeConstants.FORBIDDEN, "You don't have permission to access this feature");
             string result = JsonSerializer.Serialize(error);

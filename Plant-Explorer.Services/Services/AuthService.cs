@@ -49,5 +49,43 @@ namespace Plant_Explorer.Services.Services
             };
         }
 
+        public async Task<RegisterResponse> RegisterAsync(RegisterRequest registerRequest)
+        {
+            if (registerRequest.Password != registerRequest.ConfirmPassword)
+            {
+                throw new Exception("Passwords do not match.");
+            }
+
+            // Check if the email is already registered
+            var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email);
+            if (existingUser != null)
+            {
+                throw new Exception("Email is already registered.");
+            }
+
+            var newUser = new ApplicationUser
+            {
+                Email = registerRequest.Email,
+                UserName = registerRequest.Email,
+                Name = registerRequest.Name,
+            };
+
+            // Create the user with the hashed password
+            var result = await _userManager.CreateAsync(newUser, registerRequest.Password);
+            if (!result.Succeeded)
+            {
+                // Combine errors into a single string for simplicity
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                throw new Exception(errors);
+            }
+
+            return new RegisterResponse
+            {
+                Message = "Registration successful.",
+                UserId = newUser.Id.ToString()
+            };
+        }
+
+
     }
 }

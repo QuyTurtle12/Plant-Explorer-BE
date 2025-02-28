@@ -10,5 +10,7 @@ namespace Plant_Explorer.Contract.Services.Interface
     public interface IAuthService
     {
         Task<LoginResponse> LoginAsync(LoginRequest loginRequest);
+        Task<RegisterResponse> RegisterAsync(RegisterRequest registerRequest);
+
     }
 }

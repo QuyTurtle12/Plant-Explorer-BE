@@ -36,5 +36,21 @@ namespace Plant_Explorer.Controllers
             }
 
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
+        {
+            try
+            {
+                var response = await _authService.RegisterAsync(registerRequest);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                // You could differentiate exception types for better error handling if needed
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
     }
 }
