@@ -16,6 +16,7 @@ namespace Plant_Explorer.Services
             services.AddRepository();
             services.AddAutoMapper();
             services.AddServices(configuration);
+
         }
 
         public static void AddRepository(this IServiceCollection services)
