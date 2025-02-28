@@ -1,20 +1,26 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Plant_Explorer.Contract.Repositories.Base;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.DI;
 using Plant_Explorer.Middleware;
 using Plant_Explorer.Repositories.Base;
 using Plant_Explorer.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
+// Configure configuration sources
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
+
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -37,6 +43,7 @@ app.UseSwaggerUI();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseCors("AllowAllOrigins");
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<PermissionHandlingMiddleware>();
 app.UseMiddleware<CustomExceptionHandlerMiddleware>();
