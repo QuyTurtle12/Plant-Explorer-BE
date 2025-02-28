@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Plant_Explorer.Contract.Repositories.Base;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.ModelViews.AuthModel;
 using Plant_Explorer.Contract.Services.Interface;
@@ -10,15 +11,18 @@ namespace Plant_Explorer.Services.Services
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly Contract.Repositories.Base.JwtSettings _jwtSettings;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly JwtSettings _jwtSettings;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
-            IOptions<Contract.Repositories.Base.JwtSettings> jwtOptions,
+            RoleManager<ApplicationRole> roleManager,
+            IOptions<JwtSettings> jwtOptions,
             IPasswordHasher<ApplicationUser> passwordHasher)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _jwtSettings = jwtOptions.Value;
             _passwordHasher = passwordHasher;
         }
@@ -56,28 +60,37 @@ namespace Plant_Explorer.Services.Services
                 throw new Exception("Passwords do not match.");
             }
 
-            // Check if the email is already registered
             var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email);
             if (existingUser != null)
             {
                 throw new Exception("Email is already registered.");
             }
 
+            // Look up the default role 
+            var defaultRole = await _roleManager.FindByNameAsync("Children");
+            if (defaultRole == null)
+            {
+                throw new Exception("Default role not found. Please contact support.");
+            }
+
+            // Create a new ApplicationUser with a valid RoleId.
             var newUser = new ApplicationUser
             {
                 Email = registerRequest.Email,
                 UserName = registerRequest.Email,
                 Name = registerRequest.Name,
+                RoleId = defaultRole.Id 
             };
 
-            // Create the user with the hashed password
             var result = await _userManager.CreateAsync(newUser, registerRequest.Password);
             if (!result.Succeeded)
             {
-                // Combine errors into a single string for simplicity
                 var errors = string.Join("; ", result.Errors.Select(e => e.Description));
                 throw new Exception(errors);
             }
+
+            // Optionally, assign the role to the user via Identity.
+            await _userManager.AddToRoleAsync(newUser, defaultRole.Name);
 
             return new RegisterResponse
             {
@@ -85,6 +98,7 @@ namespace Plant_Explorer.Services.Services
                 UserId = newUser.Id.ToString()
             };
         }
+
 
 
     }
