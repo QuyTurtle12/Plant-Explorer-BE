@@ -34,7 +34,7 @@ namespace Plant_Explorer.Services.Services
             _contextAccessor = contextAccessor;
         }
 
-        public async Task<PaginatedList<GetUserModel>> GetAllUsersAsync(int index, int pageSize, string? idSearch, string? nameSearch, EnumRole? role)
+        public async Task<PaginatedList<GetUserModel>> GetAllUsersAsync(int index, int pageSize, string? idSearch, string? nameSearch, string? emailSearch, EnumRole? role)
         {
             // index checking
             if (index <= 0)
@@ -66,6 +66,13 @@ namespace Plant_Explorer.Services.Services
             {
                 // Search user by name
                 query = query.Where(u => u.Name.Contains(nameSearch));
+            }
+            
+            // Check if user want to search users by email 
+            if (!string.IsNullOrWhiteSpace(emailSearch))
+            {
+                // Search user by email
+                query = query.Where(u => u.Email!.Contains(emailSearch));
             }
 
             // Check if user want to get a list of user base on their role

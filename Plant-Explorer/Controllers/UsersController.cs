@@ -33,12 +33,13 @@ namespace Plant_Explorer.Controllers
         /// <param name="pageSize"></param>
         /// <param name="idSearch"></param>
         /// <param name="nameSearch"></param>
+        /// <param name="emailSearch"></param>
         /// <param name="role"> 1 = Children, 2 = Staff, 3 = Admin</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers(int index = 1, int pageSize = 10, string? idSearch = null, string? nameSearch = null, EnumRole? role = null)
+        public async Task<IActionResult> GetAllUsers(int index = 1, int pageSize = 10, string? idSearch = null, string? nameSearch = null, string? emailSearch = null, EnumRole? role = null)
         {
-            PaginatedList<GetUserModel> result = await _userService.GetAllUsersAsync(index, pageSize, idSearch, nameSearch, role);
+            PaginatedList<GetUserModel> result = await _userService.GetAllUsersAsync(index, pageSize, idSearch, nameSearch, emailSearch, role);
             return Ok(new BaseResponseModel<PaginatedList<GetUserModel>>(
                  statusCode: StatusCodes.Status200OK,
                  code: ResponseCodeConstants.SUCCESS,

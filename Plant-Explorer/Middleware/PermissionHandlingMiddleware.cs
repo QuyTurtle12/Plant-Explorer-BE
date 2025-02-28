@@ -24,7 +24,7 @@ namespace Plant_Explorer.Middleware
             _logger = logger;
             _excludedUris = new()
             {
-                    { "GET", new List<string>() { "/api/users" } },
+                    { "GET", new List<string>() { "/api/users", "/api/roles" } },
                     { "POST", new List<string>() { "/api/users" } },
                     { "PUT", new List<string>() { "/api/users" } },
                 //    { "PATCH", new List<string>() {  } },

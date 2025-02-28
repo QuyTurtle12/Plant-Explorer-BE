@@ -34,6 +34,7 @@ namespace Plant_Explorer.Services
         public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
             //..
         }
     }
