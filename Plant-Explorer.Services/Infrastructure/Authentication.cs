@@ -13,30 +13,35 @@ namespace Plant_Explorer.Services.Infrastructure
 {
     public class Authentication
     {
-        public static string CreateToken(string id, JwtSettings jwtSettings, bool isRefresh = false)
+        public static string CreateToken(string id, string username, string role, JwtSettings jwtSettings, bool isRefresh = false)
         {
-            // Common claims for both tokens
+            // Add claims for id, username, and role.
             List<Claim> claims = new List<Claim>
-        {
-            new Claim("id", id),
-        };
+    {
+        new Claim("id", id),
+        new Claim("username", username),
+        new Claim("role", role)
+    };
+
             DateTime dateTimeExpr = DateTime.Now.AddMinutes(jwtSettings.AccessTokenExpirationMinutes);
             if (isRefresh)
             {
                 dateTimeExpr = DateTime.Now.AddDays(jwtSettings.RefreshTokenExpirationDays);
             }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey ?? string.Empty));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            // Generate access token
-            JwtSecurityToken accessToken = new JwtSecurityToken(
+
+            // Create the JWT token
+            JwtSecurityToken token = new JwtSecurityToken(
                 claims: claims,
                 issuer: jwtSettings.Issuer,
                 audience: jwtSettings.Audience,
                 expires: dateTimeExpr,
                 signingCredentials: creds
             );
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(accessToken);
-            return tokenString;
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public static string GetUserIdFromHttpContextAccessor(IHttpContextAccessor httpContextAccessor)

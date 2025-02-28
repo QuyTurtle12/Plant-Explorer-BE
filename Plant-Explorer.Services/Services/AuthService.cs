@@ -31,6 +31,8 @@ namespace Plant_Explorer.Services.Services
         {
             // Find user by email (or username, depending on your requirements)
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
+            var roles = await _userManager.GetRolesAsync(user);
+            string userRole = roles.FirstOrDefault() ?? "Not Found Role";
             if (user == null)
             {
                 throw new UnauthorizedException("Invalid email or password");
@@ -44,7 +46,7 @@ namespace Plant_Explorer.Services.Services
             }
 
             // Create JWT token using the helper method (from your provided Authentication class)
-            string token = Authentication.CreateToken(user.Id.ToString(), _jwtSettings, isRefresh: false);
+            string token = Authentication.CreateToken(user.Id.ToString(), user.UserName, userRole, _jwtSettings, isRefresh: false);
 
             return new LoginResponse
             {
