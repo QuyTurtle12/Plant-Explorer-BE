@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Plant_Explorer.Contract.Repositories.Interface;
@@ -36,6 +37,8 @@ namespace Plant_Explorer.Services
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
+
         }
     }
 }

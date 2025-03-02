@@ -9,6 +9,9 @@ using Plant_Explorer.Middleware;
 using Plant_Explorer.Repositories.Base;
 using Plant_Explorer.Services;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,40 +32,61 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
 builder.Services.AddApplication(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
 }).AddEntityFrameworkStores<PlantExplorerDbContext>()
 .AddDefaultTokenProviders();
+builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnRedirectToLogin = context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api"))
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        }
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
+
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api"))
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return Task.CompletedTask;
+        }
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
+});
 
 // Configure DbContext with connection string from appsettings.json
 builder.Services.AddDbContext<PlantExplorerDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+// Set the minimum level to Debug
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
+
+
 var app = builder.Build();
+
 
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<PermissionHandlingMiddleware>();
+
+//app.UseMiddleware<PermissionHandlingMiddleware>();
 app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+
 app.MapControllers();
 app.Run();
-
-//// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
-
-//app.UseHttpsRedirection();
-
-//app.UseAuthorization();
-
-//app.MapControllers();
-
-//app.Run();

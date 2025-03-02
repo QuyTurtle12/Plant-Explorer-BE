@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Plant_Explorer.Contract.Repositories.ModelViews.AuthModel;
 using Plant_Explorer.Contract.Services.Interface;
@@ -50,6 +51,47 @@ namespace Plant_Explorer.Controllers
                 // You could differentiate exception types for better error handling if needed
                 return BadRequest(new { message = ex.Message });
             }
+        }
+        
+        [HttpGet("public")]
+        public IActionResult Public()
+        {
+            return Ok(new { Message = "This is a public endpoint accessible to everyone." });
+        }
+
+        [Authorize]
+        [HttpGet("authenticated")]
+        public IActionResult Authenticated()
+        {
+            foreach (var claim in HttpContext.User.Claims)
+            {
+                Console.WriteLine($"{claim.Type}: {claim.Value}");
+            }
+            return Ok(new { Message = "You are authenticated!" });
+        }
+
+        [Authorize(Roles = "Children")]
+        [HttpGet("children")]
+        public IActionResult ChildrenOnly()
+        {
+            bool isInRole = HttpContext.User.IsInRole("Children");
+            Console.WriteLine($"IsInRole(\"Children\"): {isInRole}");
+
+            return Ok(new { Message = "Hello, Child user!" });
+        }
+
+        [Authorize(Roles = "Staff")]
+        [HttpGet("staff")]
+        public IActionResult StaffOnly()
+        {
+            return Ok(new { Message = "Hello, Staff member!" });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin")]
+        public IActionResult AdminOnly()
+        {
+            return Ok(new { Message = "Hello, Admin!" });
         }
 
     }
