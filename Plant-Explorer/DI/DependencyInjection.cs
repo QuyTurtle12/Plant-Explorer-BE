@@ -5,6 +5,7 @@ using Plant_Explorer.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Reflection;
+using Plant_Explorer.Contract.Repositories.Interface;
 
 namespace Plant_Explorer.DI
 {
@@ -29,6 +30,7 @@ namespace Plant_Explorer.DI
             services.ConfigCors();
 
             services.JwtSettingsConfig(configuration);
+
         }
         /// <summary>
         /// 
