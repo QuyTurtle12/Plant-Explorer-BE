@@ -10,8 +10,14 @@ using Plant_Explorer.Repositories.Base;
 using Plant_Explorer.Services;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.FromFile("plant-explorer-95afb-firebase-adminsdk-fbsvc-f5232f5fc8.json"),
+});
 
 var builder = WebApplication.CreateBuilder(args);
 

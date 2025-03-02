@@ -11,6 +11,6 @@ namespace Plant_Explorer.Contract.Services.Interface
     {
         Task<LoginResponse> LoginAsync(LoginRequest loginRequest);
         Task<RegisterResponse> RegisterAsync(RegisterRequest registerRequest);
-
+        Task<GoogleLoginResponse> GoogleLoginAsync(GoogleLoginRequest request);
     }
 }

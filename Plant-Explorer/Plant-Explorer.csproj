@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FirebaseAdmin" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.12">
       <PrivateAssets>all</PrivateAssets>
@@ -32,6 +33,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Plant-Explorer.Repositories\Plant-Explorer.Repositories.csproj" />
     <ProjectReference Include="..\Plant-Explorer.Services\Plant-Explorer.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="plant-explorer-95afb-firebase-adminsdk-fbsvc-f5232f5fc8.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

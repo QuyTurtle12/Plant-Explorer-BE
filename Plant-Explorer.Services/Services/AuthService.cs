@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FirebaseAdmin.Auth;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Plant_Explorer.Contract.Repositories.Base;
 using Plant_Explorer.Contract.Repositories.Entity;
@@ -101,6 +102,68 @@ namespace Plant_Explorer.Services.Services
             };
         }
 
+        public async Task<GoogleLoginResponse> GoogleLoginAsync(GoogleLoginRequest request)
+        {
+            if (string.IsNullOrEmpty(request.IdToken))
+            {
+                throw new Exception("IdToken is required.");
+            }
+
+            try
+            {
+                FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(request.IdToken);
+                string firebaseUid = decodedToken.Uid;
+                string email = decodedToken.Claims.ContainsKey("email") ? decodedToken.Claims["email"].ToString() : null;
+                // Default Role
+                string defaultRoleName = "Children"; 
+
+                // Find an existing user by email. If not found, create a new one.
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    // Create a new user for Google sign in
+                    var defaultRole = await _roleManager.FindByNameAsync(defaultRoleName);
+                    if (defaultRole == null)
+                    {
+                        throw new Exception("Default role not found. Please contact support.");
+                    }
+
+                    user = new ApplicationUser
+                    {
+                        Email = email,
+                        UserName = email,
+                        Name = email,
+                        RoleId = defaultRole.Id
+                    };
+
+                    var createResult = await _userManager.CreateAsync(user);
+                    if (!createResult.Succeeded)
+                    {
+                        var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
+                        throw new Exception(errors);
+                    }
+
+                    await _userManager.AddToRoleAsync(user, defaultRole.Name);
+                }
+
+                // Get user roles
+                var roles = await _userManager.GetRolesAsync(user);
+                string userRole = roles.FirstOrDefault() ?? defaultRoleName;
+
+                // Create JWT token for system.
+                string token = Authentication.CreateToken(user.Id.ToString(), user.UserName, userRole, _jwtSettings, isRefresh: false);
+
+                return new GoogleLoginResponse
+                {
+                    Token = token,
+                    UserId = user.Id.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new UnauthorizedException("Invalid Google token: " + ex.Message);
+            }
+        }
 
 
     }

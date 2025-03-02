@@ -74,8 +74,10 @@ namespace Plant_Explorer.Controllers
         [HttpGet("children")]
         public IActionResult ChildrenOnly()
         {
-            bool isInRole = HttpContext.User.IsInRole("Children");
-            Console.WriteLine($"IsInRole(\"Children\"): {isInRole}");
+            foreach (var claim in HttpContext.User.Claims)
+            {
+                Console.WriteLine($"{claim.Type}: {claim.Value}");
+            }
 
             return Ok(new { Message = "Hello, Child user!" });
         }
@@ -84,6 +86,11 @@ namespace Plant_Explorer.Controllers
         [HttpGet("staff")]
         public IActionResult StaffOnly()
         {
+            foreach (var claim in HttpContext.User.Claims)
+            {
+                Console.WriteLine($"{claim.Type}: {claim.Value}");
+            }
+
             return Ok(new { Message = "Hello, Staff member!" });
         }
 
@@ -91,7 +98,30 @@ namespace Plant_Explorer.Controllers
         [HttpGet("admin")]
         public IActionResult AdminOnly()
         {
+            foreach (var claim in HttpContext.User.Claims)
+            {
+                Console.WriteLine($"{claim.Type}: {claim.Value}");
+            }
+
             return Ok(new { Message = "Hello, Admin!" });
+        }
+
+        [HttpPost("google")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        {
+            try
+            {
+                var response = await _authService.GoogleLoginAsync(request);
+                return Ok(response);
+            }
+            catch (UnauthorizedException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
     }
