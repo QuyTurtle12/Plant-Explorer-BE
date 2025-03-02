@@ -12,6 +12,7 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Firestore;
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 FirebaseApp.Create(new AppOptions()
@@ -21,6 +22,14 @@ FirebaseApp.Create(new AppOptions()
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<FirestoreDb>(sp =>
+{
+    return new FirestoreDbBuilder
+    {
+        ProjectId = "plant-explorer-95afb",
+        Credential = GoogleCredential.FromFile("plant-explorer-95afb-firebase-adminsdk-fbsvc-f5232f5fc8.json")
+    }.Build();
+});
 
 // Configure configuration sources
 builder.Configuration

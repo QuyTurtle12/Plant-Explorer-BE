@@ -38,6 +38,7 @@ namespace Plant_Explorer.Services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
+            services.AddScoped<IImageService, ImageService>();
 
         }
     }
