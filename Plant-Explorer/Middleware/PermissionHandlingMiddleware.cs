@@ -24,11 +24,11 @@ namespace Plant_Explorer.Middleware
             _logger = logger;
             _excludedUris = new()
             {
-                    { "GET", new List<string>() { "/api/users", "/api/roles" } },
-                    { "POST", new List<string>() { "/api/users" } },
-                    { "PUT", new List<string>() { "/api/users" } },
+                    { "GET", new List<string>() { "/api/users", "/api/roles", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants" } },
+                    { "POST", new List<string>() { "/api/users", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants" } },
+                    { "PUT", new List<string>() { "/api/users", "/api/badges", "/api/userpoints" } },
                 //    { "PATCH", new List<string>() {  } },
-                    { "DELETE", new List<string>() { "/api/users" } },
+                    { "DELETE", new List<string>() { "/api/users", "/api/badges", "/api/favoriteplants" } },
                 //    { "CONTROLLER", new List<string>() { "/api/foods", "/api/categoriesfoods", "/api/auth", "/api/menus" } }
             };
             //    _rolePermissions = new()
