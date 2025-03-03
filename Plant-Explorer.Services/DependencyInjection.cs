@@ -35,11 +35,6 @@ namespace Plant_Explorer.Services
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IBadgeService, BadgeService>();
-            services.AddScoped<IUserBadgeService, UserBadgeService>();
-            services.AddScoped<IBugReportService, BugReportService>();
-            services.AddScoped<IUserPointService, UserPointService>();
-            services.AddScoped<IFavoritePlantService, FavoritePlantService>();
             //..
         }
     }

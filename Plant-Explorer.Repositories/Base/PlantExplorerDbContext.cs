@@ -9,7 +9,7 @@ namespace Plant_Explorer.Repositories.Base
     public class PlantExplorerDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public PlantExplorerDbContext(DbContextOptions<PlantExplorerDbContext> options)  // Constructor that accepts options
-           : base(options)
+           : base(options) 
         {
 
         }
