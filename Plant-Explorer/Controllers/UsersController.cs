@@ -79,7 +79,7 @@ namespace Plant_Explorer.Controllers
         {
             newUser.RoleName = "Children";
             await _userService.CreateUserAsync(newUser);
-            return Ok(new BaseResponseModel<PostUserModel>(
+            return Ok(new BaseResponseModel(
                 statusCode: StatusCodes.Status201Created,
                 code: ResponseCodeConstants.SUCCESS,
                 message: "Create a new child successfully"
@@ -97,7 +97,7 @@ namespace Plant_Explorer.Controllers
         {
             newUser.RoleName = "Staff";
             await _userService.CreateUserAsync(newUser);
-            return Ok(new BaseResponseModel<PostUserModel>(
+            return Ok(new BaseResponseModel(
                 statusCode: StatusCodes.Status201Created,
                 code: ResponseCodeConstants.SUCCESS,
                 message: "Create a new staff successfully"
@@ -115,7 +115,7 @@ namespace Plant_Explorer.Controllers
         public async Task<IActionResult> UpdateUser(string id, PutUserModel updatedUser)
         {
             await _userService.UpdateUserAsync(id, updatedUser);
-            return Ok(new BaseResponseModel<PostUserModel>(
+            return Ok(new BaseResponseModel(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 message: "Update a user successfully"
@@ -132,7 +132,7 @@ namespace Plant_Explorer.Controllers
         public async Task<IActionResult> DeleteUser(string id)
         {
             await _userService.DeleteUserAsync(id);
-            return Ok(new BaseResponseModel<PostUserModel>(
+            return Ok(new BaseResponseModel(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 message: "Delete a user successfully"
