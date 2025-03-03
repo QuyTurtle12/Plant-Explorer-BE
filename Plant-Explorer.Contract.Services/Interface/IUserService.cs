@@ -11,5 +11,7 @@ namespace Plant_Explorer.Contract.Services.Interface
         Task CreateUserAsync(PostUserModel newUser);
         Task UpdateUserAsync(string id, PutUserModel user);
         Task DeleteUserAsync(string id);
+        Task<string> GetCurrentUserId();
+
     }
 }

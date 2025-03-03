@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Plant_Explorer.Contract.Repositories.Interface;
@@ -16,6 +17,7 @@ namespace Plant_Explorer.Services
             services.AddRepository();
             services.AddAutoMapper();
             services.AddServices(configuration);
+
         }
 
         public static void AddRepository(this IServiceCollection services)
@@ -40,7 +42,12 @@ namespace Plant_Explorer.Services
             services.AddScoped<IBugReportService, BugReportService>();
             services.AddScoped<IUserPointService, UserPointService>();
             services.AddScoped<IFavoritePlantService, FavoritePlantService>();
-            //..
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
+            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IAvatarService, AvatarService>();
+            services.AddScoped<IPlantImageService, PlantImageService>();
+
         }
     }
 }
