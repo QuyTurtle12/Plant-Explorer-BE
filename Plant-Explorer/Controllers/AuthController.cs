@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Plant_Explorer.Contract.Repositories.ModelViews.AuthModel;
 using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Services.Infrastructure;
+using Plant_Explorer.Services.Services;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Plant_Explorer.Controllers
 {
@@ -12,10 +15,12 @@ namespace Plant_Explorer.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IUserService userService)
         {
             _authService = authService;
+            _userService = userService;
         }
 
         [HttpPost("login")]
@@ -63,6 +68,11 @@ namespace Plant_Explorer.Controllers
         [HttpGet("authenticated")]
         public IActionResult Authenticated()
         {
+
+            string id = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            string username = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+            string role = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
+
             foreach (var claim in HttpContext.User.Claims)
             {
                 Console.WriteLine($"{claim.Type}: {claim.Value}");
@@ -86,6 +96,7 @@ namespace Plant_Explorer.Controllers
         [HttpGet("staff")]
         public IActionResult StaffOnly()
         {
+
             foreach (var claim in HttpContext.User.Claims)
             {
                 Console.WriteLine($"{claim.Type}: {claim.Value}");
@@ -124,5 +135,14 @@ namespace Plant_Explorer.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet("currentUser")]
+        public IActionResult CurrentUser()
+        {
+
+            var id = _userService.GetCurrentUserId();
+
+            return Ok(new { Message = $"You are authenticated! {id}" });
+        }
     }
 }

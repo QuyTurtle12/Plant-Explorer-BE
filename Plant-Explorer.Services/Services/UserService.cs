@@ -143,5 +143,16 @@ namespace Plant_Explorer.Services.Services
 
             return paginatedList;
         }
+    
+        public async Task<string> GetCurrentUserId()
+        {
+            var user = _contextAccessor.HttpContext?.User;
+
+            string id = user.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            string username = user.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+            string role = user.Claims.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
+
+            return id;
+        }
     }
 }
