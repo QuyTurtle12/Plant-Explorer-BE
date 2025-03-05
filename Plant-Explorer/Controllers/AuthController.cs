@@ -134,15 +134,5 @@ namespace Plant_Explorer.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-
-        [Authorize]
-        [HttpGet("currentUser")]
-        public IActionResult CurrentUser()
-        {
-
-            var id = _userService.GetCurrentUserId();
-
-            return Ok(new { Message = $"You are authenticated! {id}" });
-        }
     }
 }

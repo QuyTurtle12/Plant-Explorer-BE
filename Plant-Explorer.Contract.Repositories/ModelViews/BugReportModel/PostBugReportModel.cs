@@ -2,6 +2,5 @@
 {
     public class PostBugReportModel : BaseBugReportModel
     {
-        public string userId { get; set; } = string.Empty;
     }
 }

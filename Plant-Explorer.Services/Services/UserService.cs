@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews.UserModel;
+using Plant_Explorer.Contract.Repositories.ModelViews.UserPointModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
 using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Core.Constants;
@@ -18,8 +19,9 @@ namespace Plant_Explorer.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHttpContextAccessor _contextAccessor;
-        
+        private readonly IUserPointService _userPointService;
+        private readonly ITokenService _tokenService;
+
         public const string children = "Children";
         public const string staff = "Staff";
         public const string admin = "Admin";
@@ -27,11 +29,12 @@ namespace Plant_Explorer.Services.Services
         public const int INACTIVE = 0;
         public const int ACTIVE = 1;
 
-        public UserService(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor)
+        public UserService(IMapper mapper, IUnitOfWork unitOfWork, IUserPointService userPointService, ITokenService tokenService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _contextAccessor = contextAccessor;
+            _userPointService = userPointService;
+            _tokenService = tokenService;
         }
 
         public async Task<PaginatedList<GetUserModel>> GetAllUsersAsync(int index, int pageSize, string? idSearch, string? nameSearch, string? emailSearch, EnumRole? role)
@@ -109,14 +112,14 @@ namespace Plant_Explorer.Services.Services
             // Skip deleted item
             query = query.Where(u => !u.DeletedTime.HasValue);
 
-            //// Get current login user id
-            //string currentUserId = Authentication.GetUserIdFromHttpContextAccessor(_contextAccessor).ToUpper();
+            // Get current login user id
+            string? currentUserId = _tokenService.GetCurrentUserId();
 
-            //// Convert to guid type
-            //Guid.TryParse(currentUserId, out Guid userId);
+            // Convert to guid type
+            Guid.TryParse(currentUserId, out Guid userId);
 
-            ////Skip current login account
-            //query = query.Where(u => u.Id != userId);
+            //Skip current login account
+            query = query.Where(u => u.Id != userId);
 
             // Sort the list by name
             query = query.OrderBy(u => u.Name);
@@ -164,9 +167,12 @@ namespace Plant_Explorer.Services.Services
             return paginatedList;
         }
 
-        public async Task<GetUserModel> GetUserProfileAsync(string id)
+        public async Task<GetUserModel> GetUserProfileAsync()
         {
-            ApplicationUser? user = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(Guid.Parse(id)) ;
+            // Get current login user id
+            string? id = _tokenService.GetCurrentUserId();
+
+            ApplicationUser? user = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(Guid.Parse(id!)) ;
 
             // Validate if user is existed
             if (user == null || user.DeletedTime.HasValue) throw new ErrorException(StatusCodes.Status404NotFound, ResponseCodeConstants.NOT_FOUND, "User not found!");
@@ -202,6 +208,8 @@ namespace Plant_Explorer.Services.Services
             GeneralValidation(newUser);
             MailValidation(newUser);
 
+            if(newUser.Password != newUser.ConfirmedPassword) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Password does not match with Confirmed Password");
+
             // Mapping model to entities
             ApplicationUser user = _mapper.Map<ApplicationUser>(newUser);
 
@@ -215,10 +223,23 @@ namespace Plant_Explorer.Services.Services
             if (!roleId.HasValue) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Invalid Role");
 
             user.RoleId = roleId.Value;
-            
+
+            // Hash user password
+            string HashedPassword = HashPasswordService.HashPasswordBcrypt(newUser.Password);
+            user.PasswordHash = HashedPassword;
+
             // Add new user to database and save
             await _unitOfWork.GetRepository<ApplicationUser>().InsertAsync(user);
             await _unitOfWork.SaveAsync();
+
+            // Create user point if user is children
+            if (newUser.RoleName == EnumRole.Children.ToString())
+            {
+                PostUserPointModel newUserPoint = new PostUserPointModel();
+                newUserPoint.UserId = user.Id.ToString();
+                await _userPointService.CreateUserPointAsync(newUserPoint);
+            }
+            
         }
 
         public async Task UpdateUserAsync(string id, PutUserModel updatedUser)
@@ -310,16 +331,7 @@ namespace Plant_Explorer.Services.Services
 
             if (IsExistingEmail) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "This email is already existed");
         }
-        
-        public async Task<string> GetCurrentUserId()
-        {
-            var user = _contextAccessor.HttpContext?.User;
 
-            string id = user.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-            string username = user.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
-            string role = user.Claims.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
 
-            return id;
-        }
     }
 }

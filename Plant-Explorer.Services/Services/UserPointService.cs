@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
-using Plant_Explorer.Contract.Repositories.ModelViews.UserModel;
 using Plant_Explorer.Contract.Repositories.ModelViews.UserPointModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
 using Plant_Explorer.Contract.Services.Interface;
@@ -17,24 +16,19 @@ namespace Plant_Explorer.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
 
         private const int INITIAL_POINT = 0;
 
-        public UserPointService(IMapper mapper, IUnitOfWork unitOfWork)
+        public UserPointService(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
         }
 
         public async Task CreateUserPointAsync(PostUserPointModel newUserPoint)
         {
-            // Check user id format
-            Guid userIdGuid;
-            if (!Guid.TryParse(newUserPoint.UserId, out userIdGuid))
-            {
-                throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "Invalid User ID format.");
-            }
-
             // Validate if user existed
             ApplicationUser? existingUser = await _unitOfWork.GetRepository<ApplicationUser>().Entities
                                                             .Where(u => u.Id.Equals(Guid.Parse(newUserPoint.UserId)))
@@ -138,14 +132,10 @@ namespace Plant_Explorer.Services.Services
             return paginatedList;
         }
 
-        public async Task<GetUserPointModel> GetUserPointByUserIdAsync(string userId)
+        public async Task<GetUserPointModel> GetCurrentUserPointdAsync()
         {
-            // Check user id format
-            Guid userIdGuid;
-            if (!Guid.TryParse(userId, out userIdGuid))
-            {
-                throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "Invalid User ID format.");
-            }
+            // Get current login user id
+            string? userId = _tokenService.GetCurrentUserId();
 
             // Get user point by user Id
             UserPoint? userPoint = await _unitOfWork.GetRepository<UserPoint>().Entities
@@ -170,22 +160,18 @@ namespace Plant_Explorer.Services.Services
 
         public async Task UpdateUserPointAsync(PutUserPointModel updatedUserPoint)
         {
-            // Check user id format
-            Guid userIdGuid;
-            if (!Guid.TryParse(updatedUserPoint.UserId, out userIdGuid))
-            {
-                throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "Invalid User ID format.");
-            }
+            // Get current login user id
+            string? userId = _tokenService.GetCurrentUserId();
 
             // Validate if user existed
             ApplicationUser? existingUser = await _unitOfWork.GetRepository<ApplicationUser>().Entities
-                                                            .Where(u => u.Id.Equals(Guid.Parse(updatedUserPoint.UserId)))
+                                                            .Where(u => u.Id.Equals(Guid.Parse(userId)))
                                                             .FirstOrDefaultAsync()
                                                             ?? throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "This user is not exist!");
 
             // Validate if user point existed
             UserPoint? existingUserPoint = await _unitOfWork.GetRepository<UserPoint>().Entities
-                                                            .Where(u => u.UserId.Equals(Guid.Parse(updatedUserPoint.UserId)))
+                                                            .Where(u => u.UserId.Equals(Guid.Parse(userId)))
                                                             .FirstOrDefaultAsync();
             // print error if user doesn't have point
             if (existingUserPoint == null) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "This user hasn't had point yet");

@@ -48,15 +48,14 @@ namespace Plant_Explorer.Controllers
         }
 
         /// <summary>
-        /// Get user point by user id
+        /// Get curent logged in user point
         /// </summary>
-        /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("user")]
-        public async Task<IActionResult> GetUserPointByUserId([Required] string userId)
+        public async Task<IActionResult> GetCurrentUserPoint()
         {
-            GetUserPointModel result = await _userPointService.GetUserPointByUserIdAsync(userId);
+            GetUserPointModel result = await _userPointService.GetCurrentUserPointdAsync();
             return Ok(new BaseResponseModel<GetUserPointModel>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
@@ -71,17 +70,17 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="newUserPoint"></param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user")]
-        public async Task<IActionResult> CreateUserPoint(PostUserPointModel newUserPoint)
-        {
-            await _userPointService.CreateUserPointAsync(newUserPoint);
-            return Ok(new BaseResponseModel(
-                statusCode: StatusCodes.Status201Created,
-                code: ResponseCodeConstants.SUCCESS,
-                message: "Create a user point successfully"
-                ));
-        }
+        //[HttpPost]
+        //[Route("user")]
+        //public async Task<IActionResult> CreateUserPoint(PostUserPointModel newUserPoint)
+        //{
+        //    await _userPointService.CreateUserPointAsync(newUserPoint);
+        //    return Ok(new BaseResponseModel(
+        //        statusCode: StatusCodes.Status201Created,
+        //        code: ResponseCodeConstants.SUCCESS,
+        //        message: "Create a user point successfully"
+        //        ));
+        //}
 
         /// <summary>
         /// Updated user point

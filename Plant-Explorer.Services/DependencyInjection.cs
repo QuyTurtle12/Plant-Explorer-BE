@@ -47,6 +47,7 @@ namespace Plant_Explorer.Services
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IAvatarService, AvatarService>();
             services.AddScoped<IPlantImageService, PlantImageService>();
+            services.AddScoped<ITokenService, TokenService>();
 
         }
     }

@@ -15,19 +15,25 @@ namespace Plant_Explorer.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
 
-        public FavoritePlantService(IMapper mapper, IUnitOfWork unitOfWork)
+        public FavoritePlantService(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
         }
 
         public async Task CreateUserFavoritePlantAsync(PostFavoritePlantModel newFavoritePlant)
         {
-            await GeneralValidationAsync(newFavoritePlant);
+            // Get current login user id
+            string? userId = _tokenService.GetCurrentUserId();
+
+            await GeneralValidationAsync(userId, newFavoritePlant);
 
             // Mapping model to entities
             FavoritePlant favoritePlant = _mapper.Map<FavoritePlant>(newFavoritePlant);
+            favoritePlant.UserId = Guid.Parse(userId);
 
             // Add new badge to database and save
             await _unitOfWork.GetRepository<FavoritePlant>().InsertAsync(favoritePlant);
@@ -52,7 +58,7 @@ namespace Plant_Explorer.Services.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<PaginatedList<GetFavoritePlantModel>> GetUserFavoritePlantsAsync(int index, int pageSize, string userId)
+        public async Task<PaginatedList<GetFavoritePlantModel>> GetUserFavoritePlantsAsync(int index, int pageSize)
         {
             // index checking
             if (index <= 0)
@@ -66,17 +72,13 @@ namespace Plant_Explorer.Services.Services
                 throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "pageSize need to be bigger than 0");
             }
 
+            // Get current login user id
+            string? userId = _tokenService.GetCurrentUserId();
+
             // user Id checking
             if (string.IsNullOrWhiteSpace(userId))
             {
                 throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "User Id can not be empty!");
-            }
-
-            // Check user id format
-            Guid userIdGuid;
-            if (!Guid.TryParse(userId, out userIdGuid))
-            {
-                throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "Invalid User ID format.");
             }
 
             // Get list of user favorite plant
@@ -120,20 +122,11 @@ namespace Plant_Explorer.Services.Services
             return paginatedList;
         }
 
-        private async Task GeneralValidationAsync(PostFavoritePlantModel userFavoritePlant)
+        private async Task GeneralValidationAsync(string userId, PostFavoritePlantModel userFavoritePlant)
         {
-            // Validate user
-            if (string.IsNullOrWhiteSpace(userFavoritePlant.UserId)) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Name must not be empty!");
 
             // Validate plant
             if (string.IsNullOrWhiteSpace(userFavoritePlant.PlantId)) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Plant must not be empty!");
-
-            // Check user id format
-            Guid userIdGuid;
-            if (!Guid.TryParse(userFavoritePlant.UserId, out userIdGuid))
-            {
-                throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "Invalid User ID format.");
-            }
 
             // Check plant id format
             Guid plantIdGuid;
@@ -142,11 +135,6 @@ namespace Plant_Explorer.Services.Services
                 throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "Invalid Plant ID format.");
             }
 
-            // Validate if user existed
-            ApplicationUser? existingUser = await _unitOfWork.GetRepository<ApplicationUser>().Entities
-                                                            .Where(u => u.Id.Equals(Guid.Parse(userFavoritePlant.UserId)) && !u.DeletedTime.HasValue)
-                                                            .FirstOrDefaultAsync()
-                                                            ?? throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "This user is not exist!");
 
             // Validate if plant existed
             Plant? existingPlant = await _unitOfWork.GetRepository<Plant>().Entities
@@ -156,7 +144,7 @@ namespace Plant_Explorer.Services.Services
 
             // Validate if user has already marked the plant as favorite plant
             FavoritePlant? existingUserFavoritePlant = await _unitOfWork.GetRepository<FavoritePlant>().Entities
-                                                            .Where(fp => fp.UserId.Equals(Guid.Parse(userFavoritePlant.UserId)) && fp.PlantId.Equals(Guid.Parse(userFavoritePlant.PlantId)))
+                                                            .Where(fp => fp.UserId.Equals(Guid.Parse(userId)) && fp.PlantId.Equals(Guid.Parse(userFavoritePlant.PlantId)))
                                                             .FirstOrDefaultAsync();
 
             if (existingUserFavoritePlant != null) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "This plant has already marked favorite by this user!");

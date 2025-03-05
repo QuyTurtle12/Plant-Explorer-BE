@@ -16,11 +16,13 @@ namespace Plant_Explorer.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
 
-        public UserBadgeService(IMapper mapper, IUnitOfWork unitOfWork)
+        public UserBadgeService(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
         }
 
         public async Task CreateUserBadgeAsync(PostUserBadgeModel newUserBadge)
@@ -38,8 +40,11 @@ namespace Plant_Explorer.Services.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<PaginatedList<GetUserBadgeModel>> GetUserBadgesAsync(int index, int pageSize, string userId)
+        public async Task<PaginatedList<GetUserBadgeModel>> GetUserBadgesAsync(int index, int pageSize)
         {
+            // Get current login user id
+            string? userId = _tokenService.GetCurrentUserId();
+
             // index checking
             if (index <= 0)
             {
@@ -58,12 +63,6 @@ namespace Plant_Explorer.Services.Services
                 throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "User Id can not be empty!");
             }
 
-            // Check user id format
-            Guid userIdGuid;
-            if (!Guid.TryParse(userId, out userIdGuid))
-            {
-                throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.BADREQUEST, "Invalid User ID format.");
-            }
 
             // Get list of user badge
             IQueryable<UserBadge> query = _unitOfWork.GetRepository<UserBadge>().Entities

@@ -5,7 +5,7 @@ namespace Plant_Explorer.Contract.Services.Interface
 {
     public interface IUserBadgeService
     {
-        Task<PaginatedList<GetUserBadgeModel>> GetUserBadgesAsync(int index, int pageSize, string userId);
+        Task<PaginatedList<GetUserBadgeModel>> GetUserBadgesAsync(int index, int pageSize);
         Task CreateUserBadgeAsync(PostUserBadgeModel newUserBadge);
     }
 }

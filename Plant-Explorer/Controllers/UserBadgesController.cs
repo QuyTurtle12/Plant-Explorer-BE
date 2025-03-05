@@ -31,14 +31,13 @@ namespace Plant_Explorer.Controllers
         /// <summary>
         /// Get all user badges of a user
         /// </summary>
-        /// <param name="userId"></param>
         /// <param name="index"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllUserBadges([Required] string userId, int index = 1, int pageSize = 10) 
+        public async Task<IActionResult> GetAllUserBadges(int index = 1, int pageSize = 10) 
         {
-            PaginatedList<GetUserBadgeModel> result = await _userBadgeService.GetUserBadgesAsync(index, pageSize, userId);
+            PaginatedList<GetUserBadgeModel> result = await _userBadgeService.GetUserBadgesAsync(index, pageSize);
             return Ok(new BaseResponseModel<PaginatedList<GetUserBadgeModel>>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,

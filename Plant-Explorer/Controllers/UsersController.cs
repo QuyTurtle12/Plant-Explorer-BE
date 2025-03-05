@@ -50,15 +50,14 @@ namespace Plant_Explorer.Controllers
         }
 
         /// <summary>
-        /// Get 1 user profile
+        /// Get current logged in user profile
         /// </summary>
-        /// <param name="id">User Id</param>
         /// <returns></returns>
         [HttpGet]
         [Route("user")]
-        public async Task<IActionResult> GetUserProfile(string id)
+        public async Task<IActionResult> GetUserProfile()
         {
-            GetUserModel result = await _userService.GetUserProfileAsync(id);
+            GetUserModel result = await _userService.GetUserProfileAsync();
             return Ok(new BaseResponseModel<GetUserModel>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,

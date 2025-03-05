@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
-using Plant_Explorer.Contract.Repositories.ModelViews.BadgeModel;
 using Plant_Explorer.Contract.Repositories.ModelViews.BugReportModel;
-using Plant_Explorer.Contract.Repositories.ModelViews.UserModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
 using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Core.Constants;
@@ -16,21 +14,28 @@ namespace Plant_Explorer.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
 
-        public BugReportService(IMapper mapper, IUnitOfWork unitOfWork)
+        public BugReportService(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
         }
 
         public async Task CreateUserReportAsync(PostBugReportModel newBugReport)
         {
+            // Get current login user id
+            string? currentUserId = _tokenService.GetCurrentUserId();
+
             GeneralValidation(newBugReport);
 
             // Mapping model to entities
             BugReport bugReport = _mapper.Map<BugReport>(newBugReport);
+            bugReport.UserId = Guid.Parse(currentUserId);
 
-            bugReport.CreatedBy = newBugReport.userId;
+            bugReport.CreatedBy = currentUserId;
+            bugReport.LastUpdatedBy = currentUserId;
 
             // Add new badge to database and save
             await _unitOfWork.GetRepository<BugReport>().InsertAsync(bugReport);

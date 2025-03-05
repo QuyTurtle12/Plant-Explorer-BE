@@ -32,14 +32,13 @@ namespace Plant_Explorer.Controllers
         /// <summary>
         /// Get all favorite plants of a user
         /// </summary>
-        /// <param name="userId"></param>
         /// <param name="index"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllUserFavoritePlants([Required] string userId, int index = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllUserFavoritePlants( int index = 1, int pageSize = 10)
         {
-            PaginatedList<GetFavoritePlantModel> result = await _favoritePlantsService.GetUserFavoritePlantsAsync(index, pageSize, userId);
+            PaginatedList<GetFavoritePlantModel> result = await _favoritePlantsService.GetUserFavoritePlantsAsync(index, pageSize);
             return Ok(new BaseResponseModel<PaginatedList<GetFavoritePlantModel>>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,

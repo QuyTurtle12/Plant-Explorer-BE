@@ -5,7 +5,7 @@ namespace Plant_Explorer.Contract.Services.Interface
 {
     public interface IFavoritePlantService
     {
-        Task<PaginatedList<GetFavoritePlantModel>> GetUserFavoritePlantsAsync(int index, int pageSize, string userId);
+        Task<PaginatedList<GetFavoritePlantModel>> GetUserFavoritePlantsAsync(int index, int pageSize);
         Task CreateUserFavoritePlantAsync(PostFavoritePlantModel newFavoritePlant);
         Task DeleteUserFavoritePlantAsync(string id);
     }
