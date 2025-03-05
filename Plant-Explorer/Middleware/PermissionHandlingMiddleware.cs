@@ -1,5 +1,6 @@
 ﻿using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Services.Infrastructure;
+using System.Security.Claims;
 
 namespace Plant_Explorer.Middleware
 {
@@ -24,50 +25,46 @@ namespace Plant_Explorer.Middleware
             _logger = logger;
             _excludedUris = new()
             {
-                    { "GET", new List<string>() { "/api/users" } }
-                //    { "POST", new List<string>() { "/api/auth/login", "/api/auth/active-account", "/api/auth/forgot-password", "/api/auth/check-valid-code", "/api/auth/reset-password", "/api/auth/login-google", "/api/auth/create-customer" } },
-                //    { "PUT", new List<string>() {  } },
+                    { "GET", new List<string>() { "/api/users", "/api/roles", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants", "/api/auth/public", "/api/auth/authenticated", "/api/image/get" } },
+                    { "POST", new List<string>() { "/api/users", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants", "/api/auth/login", "/api/auth/register", "/api/image/upload" } },
+                    { "PUT", new List<string>() { "/api/users", "/api/badges", "/api/userpoints" } },
                 //    { "PATCH", new List<string>() {  } },
-                //    { "DELETE", new List<string>() {  } },
+                    { "DELETE", new List<string>() { "/api/users", "/api/badges", "/api/favoriteplants" } },
                 //    { "CONTROLLER", new List<string>() { "/api/foods", "/api/categoriesfoods", "/api/auth", "/api/menus" } }
             };
-            //    _rolePermissions = new()
-            //{
-            //    {
-            //        "Staff", new Dictionary<string, List<string>>()
-            //        {
-            //            { "GET", new List<string>() { "/api/categoriesfoods/get", "/api/auth/info", "/api/warehouse/all", "/api/warehouse/{wareHouseID}", "/api/orders" } },
-            //            { "POST", new List<string>() { "" } },
-            //            { "PUT", new List<string>() { "/api/payment/in-place", "/api/orders/order-status-shift" } },
-            //            { "PATCH", new List<string>() {  } },
-            //            { "DELETE", new List<string>() {  } },
-            //            { "CONTROLLER", new List<string>() {  } }
-            //        }
-            //    },
-            //    {
-            //        "Customer", new Dictionary<string, List<string>>()
-            //        {
-            //            { "GET", new List<string>() { "/api/auth/info", "/api/menus", "/api/vouchers/customer", "/api/orders/customer", "/api/orders/cart", "/api/branchs" } },
-            //            { "POST", new List<string>() { "/api/auth/change-password", "/api/orders" } },
-            //            { "PUT", new List<string>() { "/api/auth/customer", "/api/orders/adjust-item" } },
-            //            { "PATCH", new List<string>() {  } },
-            //            { "DELETE", new List<string>() { "/api/orders", "/api/orders/delete-item" } },
-            //            { "CONTROLLER", new List<string>() { "/api/payment" } }
-            //        }
-            //    },
-            //    {
-            //        "Owner", new Dictionary<string, List<string>>()
-            //        {
-            //            { "GET", new List<string>() { "/api/auth/info", "/api/auth/list-staff-owner-customer" } },
-            //            { "POST", new List<string>() { "/api/auth/change-password" } },
-            //            { "PUT", new List<string>() {  } },
-            //            { "PATCH", new List<string>() {  } },
-            //            { "DELETE", new List<string>() { "/api/auth/staff" } },
-            //            { "CONTROLLER", new List<string>() {  } }
-            //        }
-            //    },
-            //};
-
+            _rolePermissions = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Children", new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "GET", new List<string>() { "/api/auth/children" } },
+                        { "POST", new List<string>() { } },
+                        { "PUT", new List<string>() { } },
+                        { "PATCH", new List<string>() { } },
+                        { "DELETE", new List<string>() { } },
+                        { "CONTROLLER", new List<string>() { } }
+                    }
+                },
+                { "Staff", new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "GET", new List<string>() { "/api/auth/staff" } },
+                        { "POST", new List<string>() { "/api/auth/staff" } },
+                        { "PUT", new List<string>() { } },
+                        { "PATCH", new List<string>() { } },
+                        { "DELETE", new List<string>() { } },
+                        { "CONTROLLER", new List<string>() { } }
+                    }
+                },
+                { "Admin", new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "GET", new List<string>() { } },
+                        { "POST", new List<string>() { } },
+                        { "PUT", new List<string>() { } },
+                        { "PATCH", new List<string>() { } },
+                        { "DELETE", new List<string>() { } },
+                        { "CONTROLLER", new List<string>() { } }
+                    }
+                }
+            };
         }
 
         /// <summary>
@@ -77,12 +74,15 @@ namespace Plant_Explorer.Middleware
         /// <param name="unitOfWork"></param>
         public async Task Invoke(HttpContext context, IUnitOfWork unitOfWork)
         {
+            _logger.LogDebug("Entered PermissionHandlingMiddleware.Invoke");
             if (HasPermission(context))
             {
+                _logger.LogDebug("Permission granted, moving to next middleware");
                 await _next(context);
             }
             else
             {
+                _logger.LogDebug("Permission denied, returning forbidden");
                 await Authentication.HandleForbiddenRequest(context);
             }
         }
@@ -91,60 +91,85 @@ namespace Plant_Explorer.Middleware
         {
             string requestUri = context.Request.Path.Value!;
             string requestMethod = context.Request.Method;
+            _logger.LogDebug("Checking permission for request: {RequestMethod} {RequestUri}", requestMethod, requestUri);
 
-            // Skip further checks for non-API endpoints
+            // Skip permission checks for non-API endpoints.
             if (!requestUri.StartsWith("/api/"))
+            {
+                _logger.LogDebug("Request is not for /api/, skipping permission check.");
                 return true;
+            }
 
-            // 1. Check excluded URIs accessible to everyone regardless of role
+            // Check if the request URI is excluded for the given method.
             if (_excludedUris.TryGetValue(requestMethod, out var allowedUris))
             {
-                // If the URI is part of the excluded URIs for the method, allow access
                 if (allowedUris.Any(uri => requestUri.StartsWith(uri, StringComparison.OrdinalIgnoreCase)))
+                {
+                    _logger.LogDebug("Request {RequestUri} is whitelisted for method {RequestMethod}.", requestUri, requestMethod);
                     return true;
+                }
             }
 
-            // 2. Check controller-wide access for excluded URIs (for any method)
+            // Check controller-wide exclusions.
             if (_excludedUris.TryGetValue("CONTROLLER", out var controllerUris))
             {
-                // Check if the URI starts with any of the controller base URIs
                 if (controllerUris.Any(controllerUri => requestUri.StartsWith(controllerUri, StringComparison.OrdinalIgnoreCase)))
+                {
+                    _logger.LogDebug("Request {RequestUri} is controller-wide whitelisted.", requestUri);
                     return true;
+                }
             }
-
 
             try
             {
-                // 3. Get the user's role from the context
-                string userRole = Authentication.GetUserRoleFromHttpContext(context);
+                // Retrieve the user role directly from HttpContext.User using ClaimTypes.Role
+                var userRole = context.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                if (string.IsNullOrEmpty(userRole))
+                {
+                    _logger.LogDebug("No role found in user claims.");
+                    return false;
+                }
+                _logger.LogDebug("User role extracted from claims: {UserRole}", userRole);
 
-                // If the user role is "admin", allow access to all endpoints
-                if (userRole == "admin")
+                // If the user is admin, allow all endpoints.
+                if (userRole.Equals("admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    _logger.LogDebug("User is admin. Allowing access.");
                     return true;
+                }
 
-                // 4. Check role-based permissions for the specific API
+                // Check role-based permissions.
                 if (_rolePermissions.TryGetValue(userRole, out var methodPermissions))
                 {
-                    // Check if the method (GET, POST, etc.) exists for the user's role
                     if (methodPermissions.TryGetValue(requestMethod, out var allowedUrisForRole))
                     {
-                        // Check if the requestUri starts with any of the allowed URIs
-                        if (allowedUrisForRole.Any(uri => requestUri.StartsWith(uri, StringComparison.OrdinalIgnoreCase)))
-                            return true;
-                    }
+                        _logger.LogDebug("Allowed URIs for role {UserRole} and method {RequestMethod}: {AllowedUris}",
+                            userRole, requestMethod, string.Join(", ", allowedUrisForRole));
 
-                    // 5. Check if the role has controller-wide access
-                    if (methodPermissions.TryGetValue("CONTROLLER", out var controllerUrisForRole))
-                    {
-                        if (controllerUrisForRole.Any(controllerUri => requestUri.StartsWith(controllerUri, StringComparison.OrdinalIgnoreCase)))
+                        if (allowedUrisForRole.Any(uri => requestUri.StartsWith(uri, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            _logger.LogDebug("Request {RequestUri} is allowed for role {UserRole} and method {RequestMethod}.", requestUri, userRole, requestMethod);
                             return true;
+                        }
+                        else
+                        {
+                            _logger.LogDebug("No matching allowed URI for request {RequestUri} under role {UserRole}.", requestUri, userRole);
+                        }
                     }
+                    else
+                    {
+                        _logger.LogDebug("No method permissions defined for method {RequestMethod} for role {UserRole}.", requestMethod, userRole);
+                    }
+                }
+                else
+                {
+                    _logger.LogDebug("No permissions defined for role {UserRole}.", userRole);
                 }
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while checking permissions");
+                _logger.LogError(ex, "Error while checking permissions for request {RequestMethod} {RequestUri}", requestMethod, requestUri);
                 return false;
             }
         }

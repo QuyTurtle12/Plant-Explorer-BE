@@ -9,6 +9,8 @@ namespace Plant_Explorer.Services.MapperProfile
         public UserProfile()
         {
             CreateMap<ApplicationUser, GetUserModel>().ReverseMap();
+            CreateMap<ApplicationUser, PostUserModel>().ReverseMap();
+            CreateMap<ApplicationUser, PutUserModel>().ReverseMap();
         }
     }
 }

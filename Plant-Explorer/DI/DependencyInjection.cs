@@ -64,7 +64,7 @@ namespace Plant_Explorer.DI
                 options.AddPolicy("AllowAllOrigins",
                     builder =>
                     {
-                        builder.WithOrigins("*")
+                        builder.AllowAnyOrigin()
                                .AllowAnyHeader()
                                .AllowAnyMethod();
                     });
@@ -90,29 +90,50 @@ namespace Plant_Explorer.DI
         /// <param name="configuration"></param>
         public static void AddAuthenJwt(this IServiceCollection services, IConfiguration configuration)
         {
-            IConfiguration jwtSettings1 = configuration.GetSection("JwtSettings");
-            services.AddAuthentication(e =>
+            var jwtSettingsSection = configuration.GetSection("JwtSettings");
+            services.AddAuthentication(options =>
             {
-                e.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                e.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(e =>
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
             {
-                e.TokenValidationParameters = new TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings1["Issuer"],
-                    ValidAudience = jwtSettings1["Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings1["SecretKey"]!))
-
+                    ValidIssuer = configuration["JwtSettings:Issuer"],
+                    ValidAudience = configuration["JwtSettings:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]))
                 };
-                e.SaveToken = true;
-                e.RequireHttpsMetadata = true;
-                e.Events = new JwtBearerEvents();
+                // Include your event handlers here
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        Console.WriteLine("Token received: " + context.Token);
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine($"Authentication failed: {context.Exception}");
+                        return Task.CompletedTask;
+                    },
+                    OnChallenge = context =>
+                    {
+                        Console.WriteLine("OnChallenge triggered: " + context.Error);
+                        return Task.CompletedTask;
+                    }
+                };
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
             });
         }
+
+
         /// <summary>
         /// 
         /// </summary>
