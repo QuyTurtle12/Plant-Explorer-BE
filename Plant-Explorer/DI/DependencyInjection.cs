@@ -191,6 +191,9 @@ namespace Plant_Explorer.DI
             services.AddLogging(); // Đăng ký logging
 
             services.AddScoped<IPlantService, PlantService>();
+
+            services.AddScoped<ICharacteristicCategoryService, CharacteristicCategoryService>();
+            services.AddScoped<IApplicationCategoryService, ApplicationCategoryService>();
         }
 
     }
