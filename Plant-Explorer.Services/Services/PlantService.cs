@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews;
@@ -76,6 +77,14 @@ namespace Plant_Explorer.Services.Services
             await _unitOfWork.GetRepository<Plant>().DeleteAsync(plantEntity);
             await _unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<PlantGetModel?> GetPlantByScientificName(string scientificName)
+        {
+            Plant? plant = await _unitOfWork.GetRepository<Plant>().Entities
+                .Where(p => p.ScientificName == scientificName || p.ScientificName.Equals(scientificName))
+                .FirstOrDefaultAsync();
+
+            return plant != null ? _mapper.Map<PlantGetModel>(plant) : null;
         }
     }
 }

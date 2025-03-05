@@ -24,26 +24,30 @@ namespace Plant_Explorer.Middleware
             _logger = logger;
             _excludedUris = new()
             {
-                    { "GET", new List<string>() { "/api/plantapplication"
+                    { "GET", new List<string>() { "/api/scanhistory"
+                    , "/api/plantapplication"
                     , "/api/plantcharacteristic"
                     , "/api/applicationcategory"
                     , "/api/characteristiccategory"
                     , "/api/Plant"
                     , "/api/users" } },
 
-                    { "POST", new List<string>() { "/api/plantapplication"
+                    { "POST", new List<string>() { "/api/scanhistory"
+                    , "/api/plantapplication"
                     , "/api/plantcharacteristic"
                     , "/api/applicationcategory"
                     , "/api/characteristiccategory"
                     , "/api/Plant" } },
 
-                    { "PUT", new List<string>() { "/api/plantapplication"
+                    { "PUT", new List<string>() { "/api/scanhistory"
+                    , "/api/plantapplication"
                     , "/api/plantcharacteristic"
                     , "/api/applicationcategory"
                     , "/api/characteristiccategory"
                     , "/api/Plant" } },
 
-                    { "DELETE", new List<string>() { "/api/plantapplication"
+                    { "DELETE", new List<string>() { "/api/scanhistory"
+                    , "/api/plantapplication"
                     , "/api/plantcharacteristic"
                     , "/api/applicationcategory"
                     , "/api/characteristiccategory"

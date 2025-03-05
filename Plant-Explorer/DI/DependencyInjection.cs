@@ -196,6 +196,7 @@ namespace Plant_Explorer.DI
             services.AddScoped<IApplicationCategoryService, ApplicationCategoryService>();
             services.AddScoped<IPlantCharacteristicService, PlantCharacteristicService>();
             services.AddScoped<IPlantApplicationService, PlantApplicationService>();
+            services.AddScoped<IScanHistoryService, ScanHistoryService>();
         }
 
     }

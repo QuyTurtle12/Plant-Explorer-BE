@@ -9,5 +9,6 @@ namespace Plant_Explorer.Contract.Services.Interface
         Task<PlantGetModel> CreatePlantAsync(PlantPostModel model);
         Task<PlantGetModel?> UpdatePlantAsync(Guid id, PlantPutModel model);
         Task<bool> DeletePlantAsync(Guid id);
+        Task<PlantGetModel?> GetPlantByScientificName(string scientificName);
     }
 }
