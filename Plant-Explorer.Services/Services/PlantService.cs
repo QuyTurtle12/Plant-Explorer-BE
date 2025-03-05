@@ -86,5 +86,14 @@ namespace Plant_Explorer.Services.Services
 
             return plant != null ? _mapper.Map<PlantGetModel>(plant) : null;
         }
+        public async Task<IEnumerable<PlantGetModel>> SearchPlantsByName(string searchStringName)
+        {
+            List<Plant> plantList = await _unitOfWork.GetRepository<Plant>().Entities
+                .Where(p => p.Name.ToLower().Contains(searchStringName.ToLower())
+                || p.ScientificName.ToLower().Contains(searchStringName.ToLower()))
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<PlantGetModel>>(plantList);
+        }
     }
 }

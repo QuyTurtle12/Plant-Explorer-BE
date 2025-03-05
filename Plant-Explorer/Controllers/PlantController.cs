@@ -88,5 +88,23 @@ namespace Plant_Explorer.Controllers
                 return NotFound();
             return NoContent();
         }
+        /// <summary>
+        /// Search plants by name/scientific name.
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <returns></returns>
+        [HttpGet("/searchByName")]
+        public async Task<IActionResult> SearchPlantByName(string? searchString)
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+            {
+                return Ok(await _plantService.GetAllPlantsAsync());
+            }
+            var plants = await _plantService.SearchPlantsByName(searchString);
+            if (plants == null || plants.Count() == 0)
+                return NotFound();
+
+            return Ok(plants);
+        }
     }
 }
