@@ -12,7 +12,7 @@ namespace Plant_Explorer.Controllers
     [Route("api/[controller]")]
     public class CharacteristicCategoryController : ControllerBase
     {
-        private readonly ICharacteristicCategoryService _service;
+        private readonly ICharacteristicCategoryService _characteristicCategoryService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CharacteristicCategoryController"/> class.
@@ -20,7 +20,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="service">The characteristic category service.</param>
         public CharacteristicCategoryController(ICharacteristicCategoryService service)
         {
-            _service = service;
+            _characteristicCategoryService = service;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Plant_Explorer.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var categories = await _service.GetAllCategoriesAsync();
+            var categories = await _characteristicCategoryService.GetAllCategoriesAsync();
             return Ok(categories);
         }
 
@@ -42,7 +42,7 @@ namespace Plant_Explorer.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var category = await _service.GetCategoryByIdAsync(id);
+            var category = await _characteristicCategoryService.GetCategoryByIdAsync(id);
             if (category == null) return NotFound();
             return Ok(category);
         }
@@ -56,7 +56,7 @@ namespace Plant_Explorer.Controllers
         public async Task<IActionResult> Create([FromBody] CharacteristicCategoryPostModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var createdCategory = await _service.CreateCategoryAsync(model);
+            var createdCategory = await _characteristicCategoryService.CreateCategoryAsync(model);
             return CreatedAtAction(nameof(GetById), new { id = createdCategory.Id }, createdCategory);
         }
 
@@ -70,7 +70,7 @@ namespace Plant_Explorer.Controllers
         public async Task<IActionResult> Update(Guid id, [FromBody] CharacteristicCategoryPutModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var updatedCategory = await _service.UpdateCategoryAsync(id, model);
+            var updatedCategory = await _characteristicCategoryService.UpdateCategoryAsync(id, model);
             if (updatedCategory == null) return NotFound();
             return Ok(updatedCategory);
         }
@@ -83,7 +83,7 @@ namespace Plant_Explorer.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var deleted = await _service.DeleteCategoryAsync(id);
+            var deleted = await _characteristicCategoryService.DeleteCategoryAsync(id);
             if (!deleted) return NotFound();
             return NoContent();
         }

@@ -24,13 +24,30 @@ namespace Plant_Explorer.Middleware
             _logger = logger;
             _excludedUris = new()
             {
-                    { "GET", new List<string>() { "/api/plantcharacteristic", "/api/applicationcategory", "/api/characteristiccategory", "/api/Plant", "/api/users" } },
+                    { "GET", new List<string>() { "/api/plantapplication"
+                    , "/api/plantcharacteristic"
+                    , "/api/applicationcategory"
+                    , "/api/characteristiccategory"
+                    , "/api/Plant"
+                    , "/api/users" } },
 
-                    { "POST", new List<string>() { "/api/plantcharacteristic", "/api/applicationcategory", "/api/characteristiccategory", "/api/Plant" } },
+                    { "POST", new List<string>() { "/api/plantapplication"
+                    , "/api/plantcharacteristic"
+                    , "/api/applicationcategory"
+                    , "/api/characteristiccategory"
+                    , "/api/Plant" } },
 
-                    { "PUT", new List<string>() { "/api/plantcharacteristic", "/api/applicationcategory", "/api/characteristiccategory", "/api/Plant" } },
+                    { "PUT", new List<string>() { "/api/plantapplication"
+                    , "/api/plantcharacteristic"
+                    , "/api/applicationcategory"
+                    , "/api/characteristiccategory"
+                    , "/api/Plant" } },
 
-                    { "DELETE", new List<string>() { "/api/plantcharacteristic", "/api/applicationcategory", "/api/characteristiccategory", "/api/Plant" } },
+                    { "DELETE", new List<string>() { "/api/plantapplication"
+                    , "/api/plantcharacteristic"
+                    , "/api/applicationcategory"
+                    , "/api/characteristiccategory"
+                    , "/api/Plant" } },
                 //    { "POST", new List<string>() { "/api/auth/login", "/api/auth/active-account", "/api/auth/forgot-password", "/api/auth/check-valid-code", "/api/auth/reset-password", "/api/auth/login-google", "/api/auth/create-customer" } },
                 //    { "PUT", new List<string>() {  } },
                 //    { "PATCH", new List<string>() {  } },
