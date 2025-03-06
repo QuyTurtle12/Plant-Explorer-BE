@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Plant_Explorer.Contract.Repositories.ModelViews;
 using Plant_Explorer.Contract.Services.Interface;
 
@@ -83,7 +82,7 @@ namespace Plant_Explorer.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var deleted = await _characteristicCategoryService.DeleteCategoryAsync(id);
+            var deleted = await _characteristicCategoryService.SoftDeleteCharacteristicCategoryAsync(id);
             if (!deleted) return NotFound();
             return NoContent();
         }

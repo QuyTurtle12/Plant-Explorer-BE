@@ -4,6 +4,7 @@ using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews;
 using Plant_Explorer.Contract.Services.Interface;
+using Plant_Explorer.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,6 +95,21 @@ namespace Plant_Explorer.Services.Services
                 .ToListAsync();
 
             return _mapper.Map<IEnumerable<PlantGetModel>>(plantList);
+        }
+
+        public async Task<bool> SoftDeletePlantAsync(Guid id)
+        {
+            Plant plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
+            if (plantEntity == null)
+                return false;
+            //Soft delete
+            plantEntity.Status = 0;
+            plantEntity.LastUpdatedTime = CoreHelper.SystemTimeNow;
+            plantEntity.DeletedTime = plantEntity.LastUpdatedTime;
+
+            await _unitOfWork.GetRepository<Plant>().UpdateAsync(plantEntity);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
     }
 }

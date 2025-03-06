@@ -9,5 +9,6 @@ namespace Plant_Explorer.Contract.Services.Interface
         Task<ApplicationCategoryGetModel> CreateCategoryAsync(ApplicationCategoryPostModel model);
         Task<ApplicationCategoryGetModel?> UpdateCategoryAsync(Guid id, ApplicationCategoryPutModel model);
         Task<bool> DeleteCategoryAsync(Guid id);
+        Task<bool> SoftDeleteApplicationCategoryAsync(Guid id);
     }
 }

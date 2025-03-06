@@ -3,6 +3,7 @@ using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews;
 using Plant_Explorer.Contract.Services.Interface;
+using Plant_Explorer.Core.Utils;
 
 namespace Plant_Explorer.Services.Services
 {
@@ -70,6 +71,23 @@ namespace Plant_Explorer.Services.Services
                 return false;
 
             await _unitOfWork.GetRepository<CharacteristicCategory>().DeleteAsync(categoryEntity);
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> SoftDeleteCharacteristicCategoryAsync(Guid id)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentException("Invalid category ID");
+
+            CharacteristicCategory categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
+            if (categoryEntity == null)
+                return false;
+            // Soft delete
+            categoryEntity.Status = 0;
+            categoryEntity.LastUpdatedTime = CoreHelper.SystemTimeNow;
+            categoryEntity.DeletedTime = categoryEntity.LastUpdatedTime;
+            
+            await _unitOfWork.GetRepository<CharacteristicCategory>().UpdateAsync(categoryEntity);
             await _unitOfWork.SaveAsync();
             return true;
         }

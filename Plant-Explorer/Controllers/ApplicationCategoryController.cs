@@ -46,7 +46,7 @@ namespace Plant_Explorer.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            return await _service.DeleteCategoryAsync(id) ? NoContent() : NotFound();
+            return await _service.SoftDeleteApplicationCategoryAsync(id) ? NoContent() : NotFound();
         }
     }
 }

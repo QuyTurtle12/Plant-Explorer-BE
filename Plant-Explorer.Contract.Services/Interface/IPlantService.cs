@@ -11,5 +11,6 @@ namespace Plant_Explorer.Contract.Services.Interface
         Task<bool> DeletePlantAsync(Guid id);
         Task<PlantGetModel?> GetPlantByScientificName(string scientificName);
         Task<IEnumerable<PlantGetModel>> SearchPlantsByName(string searchStringName);
+        Task<bool> SoftDeletePlantAsync(Guid id);
     }
 }

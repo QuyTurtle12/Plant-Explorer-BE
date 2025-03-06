@@ -83,7 +83,7 @@ namespace Plant_Explorer.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlant(Guid id)
         {
-            var result = await _plantService.DeletePlantAsync(id);
+            var result = await _plantService.SoftDeletePlantAsync(id);
             if (!result)
                 return NotFound();
             return NoContent();
