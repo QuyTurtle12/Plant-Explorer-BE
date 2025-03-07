@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Plant_Explorer.Contract.Repositories.ModelViews.QuestionModel;
 
 namespace Plant_Explorer.Contract.Repositories.PaggingItems
 {
@@ -32,6 +33,11 @@ namespace Plant_Explorer.Contract.Repositories.PaggingItems
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             return new PaginatedList<T>(items, totalCount, pageNumber, pageSize);
+        }
+
+        public static implicit operator PaginatedList<T>(PaginatedList<GetQuestionModel> v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

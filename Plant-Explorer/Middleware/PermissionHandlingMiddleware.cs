@@ -25,11 +25,11 @@ namespace Plant_Explorer.Middleware
             _logger = logger;
             _excludedUris = new()
             {
-                    { "GET", new List<string>() { "/api/users", "/api/roles", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants", "/api/auth/public", "/api/auth/authenticated", "/api/image/get" } },
-                    { "POST", new List<string>() { "/api/users", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants", "/api/auth/login", "/api/auth/register", "/api/image/upload" } },
-                    { "PUT", new List<string>() { "/api/users", "/api/badges", "/api/userpoints" } },
+                    { "GET", new List<string>() { "/api/users", "/api/roles", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants", "/api/auth/public", "/api/auth/authenticated", "/api/image/get" , "api/quizzes", "api/options", "api/quizattempts", "api/questions" } },
+                    { "POST", new List<string>() { "/api/users", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants", "/api/auth/login", "/api/auth/register", "/api/image/upload", "api/quizzes", "api/options", "api/quizattempts", "api/questions" } },
+                    { "PUT", new List<string>() { "/api/users", "/api/badges", "/api/userpoints", "api/quizzes", "api/options", "api/quizattempts", "api/questions" } },
                 //    { "PATCH", new List<string>() {  } },
-                    { "DELETE", new List<string>() { "/api/users", "/api/badges", "/api/favoriteplants" } },
+                    { "DELETE", new List<string>() { "/api/users", "/api/badges", "/api/favoriteplants", "api/quizzes", "api/options", "api/quizattempts", "api/questions" } },
                 //    { "CONTROLLER", new List<string>() { "/api/foods", "/api/categoriesfoods", "/api/auth", "/api/menus" } }
             };
             _rolePermissions = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase)
