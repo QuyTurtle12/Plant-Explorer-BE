@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews;
@@ -20,7 +21,10 @@ namespace Plant_Explorer.Services.Services
 
         public async Task<IEnumerable<CharacteristicCategoryGetModel>> GetAllCategoriesAsync()
         {
-            List<CharacteristicCategory> categories = (List<CharacteristicCategory>) await _unitOfWork.GetRepository<CharacteristicCategory>().GetAllAsync();
+            List<CharacteristicCategory> categories = (List<CharacteristicCategory>) await _unitOfWork.GetRepository<CharacteristicCategory>()
+                .Entities
+                .Where(c => c.DeletedTime != null)
+                .ToListAsync();
             return _mapper.Map<IEnumerable<CharacteristicCategoryGetModel>>(categories);
         }
 
@@ -29,7 +33,11 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            CharacteristicCategory category = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
+            CharacteristicCategory category = await _unitOfWork.GetRepository<CharacteristicCategory>()
+                .Entities
+                .Where(c => c.Id == id && c.DeletedTime == null)
+                .FirstOrDefaultAsync();
+
             return category != null ? _mapper.Map<CharacteristicCategoryGetModel>(category) : null;
         }
 
@@ -50,7 +58,7 @@ namespace Plant_Explorer.Services.Services
                 throw new ArgumentException("Invalid category ID");
 
             CharacteristicCategory categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
-            if (categoryEntity == null)
+            if (categoryEntity == null || categoryEntity.DeletedTime != null)
                 return null;
 
             if (!string.IsNullOrWhiteSpace(model.Name))
@@ -67,7 +75,7 @@ namespace Plant_Explorer.Services.Services
                 throw new ArgumentException("Invalid category ID");
 
             CharacteristicCategory categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
-            if (categoryEntity == null)
+            if (categoryEntity == null || categoryEntity.DeletedTime != null)
                 return false;
 
             await _unitOfWork.GetRepository<CharacteristicCategory>().DeleteAsync(categoryEntity);

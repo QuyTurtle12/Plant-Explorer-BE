@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Services.Interface;
@@ -20,7 +21,11 @@ namespace Plant_Explorer.Services.Services
 
         public async Task<IEnumerable<ApplicationCategoryGetModel>> GetAllCategoriesAsync()
         {
-            List<ApplicationCategory> categories = (List<ApplicationCategory>)await _unitOfWork.GetRepository<ApplicationCategory>().GetAllAsync();
+            List<ApplicationCategory> categories = (List<ApplicationCategory>)await _unitOfWork.GetRepository<ApplicationCategory>()
+                .Entities
+                .Where(c => c.DeletedTime == null)
+                .ToListAsync();
+
             return _mapper.Map<IEnumerable<ApplicationCategoryGetModel>>(categories);
         }
 
@@ -29,7 +34,11 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            ApplicationCategory category = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
+            ApplicationCategory category = await _unitOfWork.GetRepository<ApplicationCategory>()
+                .Entities
+                .Where(c => c.DeletedTime == null && c.Id == id)
+                .FirstOrDefaultAsync();
+
             return category != null ? _mapper.Map<ApplicationCategoryGetModel>(category) : null;
         }
 
@@ -50,7 +59,7 @@ namespace Plant_Explorer.Services.Services
                 throw new ArgumentException("Invalid category ID");
 
             ApplicationCategory categoryEntity = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
-            if (categoryEntity == null)
+            if (categoryEntity == null || categoryEntity.DeletedTime != null)
                 return null;
 
             if (!string.IsNullOrWhiteSpace(model.Name))
@@ -67,7 +76,7 @@ namespace Plant_Explorer.Services.Services
                 throw new ArgumentException("Invalid category ID");
 
             ApplicationCategory categoryEntity = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
-            if (categoryEntity == null)
+            if (categoryEntity == null || categoryEntity.DeletedTime != null)
                 return false;
 
             _unitOfWork.GetRepository<ApplicationCategory>().Delete(categoryEntity);

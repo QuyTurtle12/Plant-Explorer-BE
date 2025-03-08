@@ -21,13 +21,21 @@ namespace Plant_Explorer.Services.Services
 
         public async Task<IEnumerable<PlantGetModel>> GetAllPlantsAsync()
         {
-            List<Plant> plantList = (List<Plant>)await _unitOfWork.GetRepository<Plant>().GetAllAsync();
+            List<Plant> plantList = (List<Plant>)await _unitOfWork.GetRepository<Plant>().
+                Entities
+                .Where(p => p.DeletedTime == null)
+                .ToListAsync();
+
             return _mapper.Map<IEnumerable<PlantGetModel>>(plantList);
         }
 
         public async Task<PlantGetModel?> GetPlantByIdAsync(Guid id)
         {
-            Plant plant = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
+            Plant plant = await _unitOfWork.GetRepository<Plant>()
+                .Entities
+                .Where(p => p.Id == id && p.DeletedTime == null)
+                .FirstOrDefaultAsync();
+
             return plant != null ? _mapper.Map<PlantGetModel>(plant) : null;
         }
 
@@ -37,6 +45,7 @@ namespace Plant_Explorer.Services.Services
                 throw new ArgumentException("Scientific Name and Family are required");
 
             Plant plantEntity = _mapper.Map<Plant>(model);
+            plantEntity.Name = model.Name;
             await _unitOfWork.GetRepository<Plant>().InsertAsync(plantEntity);
             await _unitOfWork.SaveAsync();
             return _mapper.Map<PlantGetModel>(plantEntity);
@@ -45,7 +54,7 @@ namespace Plant_Explorer.Services.Services
         public async Task<PlantGetModel?> UpdatePlantAsync(Guid id, PlantPutModel model)
         {
             Plant plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
-            if (plantEntity == null)
+            if (plantEntity == null || plantEntity.DeletedTime != null)
                 return null;
 
             if (!string.IsNullOrWhiteSpace(model.ScientificName))
@@ -67,7 +76,7 @@ namespace Plant_Explorer.Services.Services
         public async Task<bool> DeletePlantAsync(Guid id)
         {
             Plant plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
-            if (plantEntity == null)
+            if (plantEntity == null || plantEntity.DeletedTime != null)
                 return false;
 
             await _unitOfWork.GetRepository<Plant>().DeleteAsync(plantEntity);
@@ -77,7 +86,8 @@ namespace Plant_Explorer.Services.Services
         public async Task<PlantGetModel?> GetPlantByScientificName(string scientificName)
         {
             Plant? plant = await _unitOfWork.GetRepository<Plant>().Entities
-                .Where(p => p.ScientificName == scientificName || p.ScientificName.Equals(scientificName))
+                .Where(p => (p.ScientificName == scientificName || p.ScientificName.Equals(scientificName)) 
+                && p.DeletedTime == null)
                 .FirstOrDefaultAsync();
 
             return plant != null ? _mapper.Map<PlantGetModel>(plant) : null;
@@ -85,8 +95,9 @@ namespace Plant_Explorer.Services.Services
         public async Task<IEnumerable<PlantGetModel>> SearchPlantsByName(string searchStringName)
         {
             List<Plant> plantList = await _unitOfWork.GetRepository<Plant>().Entities
-                .Where(p => p.Name.ToLower().Contains(searchStringName.ToLower())
+                .Where(p => (p.Name.ToLower().Contains(searchStringName.ToLower())
                 || p.ScientificName.ToLower().Contains(searchStringName.ToLower()))
+                && p.DeletedTime == null)
                 .ToListAsync();
 
             return _mapper.Map<IEnumerable<PlantGetModel>>(plantList);

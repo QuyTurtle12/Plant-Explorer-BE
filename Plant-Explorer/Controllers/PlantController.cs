@@ -70,6 +70,7 @@ namespace Plant_Explorer.Controllers
         public async Task<IActionResult> UpdatePlant(Guid id, PlantPutModel model)
         {
             var updatedPlant = await _plantService.UpdatePlantAsync(id, model);
+            
             if (updatedPlant == null)
                 return NotFound();
             return Ok(updatedPlant);
