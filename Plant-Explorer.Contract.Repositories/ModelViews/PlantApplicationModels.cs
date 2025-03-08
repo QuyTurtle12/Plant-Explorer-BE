@@ -6,6 +6,8 @@
         public Guid PlantId { get; set; }
         public Guid ApplicationCategoryId { get; set; }
         public string? Description { get; set; }
+        public string? PlantName { get; set; }
+        public string? ApplicationCategoryName { get; set; }
     }
 
     public class PlantApplicationPostModel

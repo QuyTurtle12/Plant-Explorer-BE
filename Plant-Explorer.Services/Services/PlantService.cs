@@ -5,11 +5,6 @@ using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews;
 using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Core.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plant_Explorer.Services.Services
 {
