@@ -5,6 +5,8 @@ using Plant_Explorer.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Reflection;
+using Plant_Explorer.Contract.Services.Interface;
+using Plant_Explorer.Services.Services;
 
 namespace Plant_Explorer.DI
 {
@@ -208,6 +210,14 @@ namespace Plant_Explorer.DI
         public static void AddServices(this IServiceCollection services)
         {
             services.AddLogging(); // Đăng ký logging
+
+            services.AddScoped<IPlantService, PlantService>();
+
+            services.AddScoped<ICharacteristicCategoryService, CharacteristicCategoryService>();
+            services.AddScoped<IApplicationCategoryService, ApplicationCategoryService>();
+            services.AddScoped<IPlantCharacteristicService, PlantCharacteristicService>();
+            services.AddScoped<IPlantApplicationService, PlantApplicationService>();
+            services.AddScoped<IScanHistoryService, ScanHistoryService>();
         }
 
     }

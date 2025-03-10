@@ -25,12 +25,60 @@ namespace Plant_Explorer.Middleware
             _logger = logger;
             _excludedUris = new()
             {
-                    { "GET", new List<string>() { "/api/users", "/api/roles", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants", "/api/auth/public", "/api/auth/authenticated", "/api/image/get" } },
-                    { "POST", new List<string>() { "/api/users", "/api/badges", "/api/userbadges", "/api/bugreports", "/api/userpoints", "/api/favoriteplants", "/api/auth/login", "/api/auth/register", "/api/image/upload" } },
-                    { "PUT", new List<string>() { "/api/users", "/api/badges", "/api/userpoints" } },
+                    { "GET", new List<string>() { "/api/scanhistory"
+                    , "/api/plantapplication"
+                    , "/api/plantcharacteristic"
+                    , "/api/applicationcategory"
+                    , "/api/characteristiccategory"
+                    , "/api/Plant"
+                    , "/api/users"
+                    , "/api/roles"
+                    , "/api/badges"
+                    , "/api/userbadges"
+                    , "/api/bugreports"
+                    , "/api/userpoints"
+                    , "/api/favoriteplants"
+                    , "/api/auth/public"
+                    , "/api/auth/authenticated"
+                    , "/api/image/get" } },
+
+                    { "POST", new List<string>() { "/api/scanhistory"
+                    , "/api/plantapplication"
+                    , "/api/plantcharacteristic"
+                    , "/api/applicationcategory"
+                    , "/api/characteristiccategory"
+                    , "/api/Plant"
+                    ,"/api/users"
+                    , "/api/badges"
+                    , "/api/userbadges"
+                    , "/api/bugreports"
+                    , "/api/userpoints"
+                    , "/api/favoriteplants"
+                    , "/api/auth/login"
+                    , "/api/auth/register"
+                    , "/api/image/upload" } },
+
+                    { "PUT", new List<string>() { "/api/scanhistory"
+                    , "/api/plantapplication"
+                    , "/api/plantcharacteristic"
+                    , "/api/applicationcategory"
+                    , "/api/characteristiccategory"
+                    , "/api/Plant"
+                    , "/api/users"
+                    , "/api/badges"
+                    , "/api/userpoints"  } },
+
+                    { "DELETE", new List<string>() { "/api/scanhistory"
+                    , "/api/plantapplication"
+                    , "/api/plantcharacteristic"
+                    , "/api/applicationcategory"
+                    , "/api/characteristiccategory"
+                    , "/api/Plant"
+                    , "/api/users"
+                    , "/api/badges"
+                    , "/api/favoriteplants" } },
                 //    { "PATCH", new List<string>() {  } },
-                    { "DELETE", new List<string>() { "/api/users", "/api/badges", "/api/favoriteplants" } },
-                //    { "CONTROLLER", new List<string>() { "/api/foods", "/api/categoriesfoods", "/api/auth", "/api/menus" } }
+                //    { "CONTROLLER", new List<string>() { "" } }
             };
             _rolePermissions = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase)
             {
