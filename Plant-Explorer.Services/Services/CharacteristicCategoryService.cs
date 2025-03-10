@@ -88,7 +88,7 @@ namespace Plant_Explorer.Services.Services
                 throw new ArgumentException("Invalid category ID");
 
             CharacteristicCategory categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
-            if (categoryEntity == null)
+            if (categoryEntity == null || categoryEntity.DeletedTime != null)
                 return false;
             // Soft delete
             categoryEntity.Status = 0;

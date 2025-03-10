@@ -31,7 +31,7 @@ namespace Plant_Explorer.Services.Services
 
         public async Task<PlantGetModel?> GetPlantByIdAsync(Guid id)
         {
-            Plant plant = await _unitOfWork.GetRepository<Plant>()
+            Plant? plant = await _unitOfWork.GetRepository<Plant>()
                 .Entities
                 .Where(p => p.Id == id && p.DeletedTime == null)
                 .FirstOrDefaultAsync();
@@ -106,7 +106,7 @@ namespace Plant_Explorer.Services.Services
         public async Task<bool> SoftDeletePlantAsync(Guid id)
         {
             Plant plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
-            if (plantEntity == null)
+            if (plantEntity == null || plantEntity.DeletedTime != null)
                 return false;
             //Soft delete
             plantEntity.Status = 0;

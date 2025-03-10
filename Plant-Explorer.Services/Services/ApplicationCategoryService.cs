@@ -89,7 +89,7 @@ namespace Plant_Explorer.Services.Services
                 throw new ArgumentException("Invalid category ID");
 
             ApplicationCategory categoryEntity = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
-            if (categoryEntity == null)
+            if (categoryEntity == null || categoryEntity.DeletedTime != null)
                 return false;
 
             categoryEntity.Status = 0;
