@@ -65,21 +65,21 @@ namespace Plant_Explorer.Services.Services
             if (file == null || file.Length == 0)
                 throw new ArgumentException("No file uploaded.");
 
-            using var memoryStream = new MemoryStream();
+            using MemoryStream memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream);
             byte[] imageBytes = memoryStream.ToArray();
             string base64Image = Convert.ToBase64String(imageBytes);
 
-            using var httpClient = _httpClientFactory.CreateClient();
-            var request = new HttpRequestMessage(HttpMethod.Post, _plantIdIdentifyUrl)
+            using HttpClient httpClient = _httpClientFactory.CreateClient();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, _plantIdIdentifyUrl)
             {
                 Headers = { { "Api-Key", _plantIdApiKey } },
                 Content = new MultipartFormDataContent { { new StringContent(base64Image), "images" } }
             };
 
-            var response = await httpClient.SendAsync(request);
+            HttpResponseMessage response = await httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            var result = JsonSerializer.Deserialize<PlantIdIdentifyResponse>(await response.Content.ReadAsStringAsync());
+            PlantIdIdentifyResponse? result = JsonSerializer.Deserialize<PlantIdIdentifyResponse>(await response.Content.ReadAsStringAsync());
 
             if (result?.AccessToken == null)
                 throw new InvalidOperationException("Failed to retrieve access token from PlantID.");
@@ -94,45 +94,54 @@ namespace Plant_Explorer.Services.Services
             if (!_memoryCache.TryGetValue(cacheKey, out CachedImage cachedImage))
                 throw new KeyNotFoundException("Image not found or cache expired");
 
-            using var httpClient = _httpClientFactory.CreateClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, _plantIdRetrieveUrl.Replace("{access_token}", cachedImage.AccessToken))
+            using HttpClient httpClient = _httpClientFactory.CreateClient();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, _plantIdRetrieveUrl.Replace("{access_token}", cachedImage.AccessToken))
             {
                 Headers = { { "Api-Key", _plantIdApiKey } }
             };
 
-            var response = await httpClient.SendAsync(request);
+            HttpResponseMessage response = await httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            var plantResult = JsonSerializer.Deserialize<PlantIdResultsResponse>(await response.Content.ReadAsStringAsync());
+            PlantIdResultsResponse? plantResult = JsonSerializer.Deserialize<PlantIdResultsResponse>(await response.Content.ReadAsStringAsync());
 
             string scientificName = plantResult?.Result?.Classification?.Suggestions?.FirstOrDefault()?.Name;
             if (string.IsNullOrEmpty(scientificName))
                 throw new KeyNotFoundException("Scientific name not found.");
-
-            string matchUrl = $"https://api.gbif.org/v1/species/match?name={Uri.EscapeDataString(scientificName)}";
-            var matchResult = JsonSerializer.Deserialize<GbifMatchResponse>(await httpClient.GetStringAsync(matchUrl));
-
-            if (matchResult?.UsageKey == null)
-                throw new KeyNotFoundException("Plant not found in GBIF database.");
-
-            string detailsUrl = $"https://api.gbif.org/v1/species/{matchResult.UsageKey}";
-            var detailsResult = JsonSerializer.Deserialize<GbifSpeciesResponse>(await httpClient.GetStringAsync(detailsUrl));
+            
 
             //Check if plant already exists in database
-            Plant existingPlant = await _unitOfWork.GetRepository<Plant>()
+            Plant? existingPlant = await _unitOfWork.GetRepository<Plant>()
                 .Entities
                 .Where(p => p.ScientificName!.Equals(scientificName))
                 .FirstOrDefaultAsync();
             //If plant does not exist, create new plant
             if (existingPlant == null)
             {
+                //Fetch plant details from GBIF
+                string matchUrl = $"https://api.gbif.org/v1/species/match?name={Uri.EscapeDataString(scientificName)}";
+                GbifMatchResponse? matchResult = JsonSerializer.Deserialize<GbifMatchResponse>(await httpClient.GetStringAsync(matchUrl));
+
+                if (matchResult?.UsageKey == null)
+                    throw new KeyNotFoundException("Plant not found in GBIF database.");
+
+                string detailsUrl = $"https://api.gbif.org/v1/species/{matchResult.UsageKey}";
+                GbifSpeciesResponse? detailsResult = JsonSerializer.Deserialize<GbifSpeciesResponse>(await httpClient.GetStringAsync(detailsUrl));
+                
+
+                // Fetch description, habitat, distribution from Wikipedia
+                string wikiUrl = $"https://en.wikipedia.org/api/rest_v1/page/summary/{Uri.EscapeDataString(scientificName)}";
+                WikipediaResponse? wikiResult = JsonSerializer.Deserialize<WikipediaResponse>(await httpClient.GetStringAsync(wikiUrl));
+                string description = wikiResult?.Extract ?? "Description not available";
+                
+
                 Plant newPlant = new Plant
                 {
                     Name = detailsResult.VernacularName,
                     ScientificName = scientificName,
                     Family = detailsResult.Family,
-                    Description = "Description not implemented yet",
-                    Habitat = "Habitat not implemented yet",
-                    Distribution = "Distribution not implemented yet"
+                    Description = description,
+                    Habitat = "not implemented yet",
+                    Distribution = "not implemented yet"
                 };
                 await _unitOfWork.GetRepository<Plant>().InsertAsync(newPlant);
                 await _unitOfWork.SaveAsync();
@@ -140,7 +149,7 @@ namespace Plant_Explorer.Services.Services
                 existingPlant = newPlant;
             }
 
-            var scanHistory = await CreateScanHistoryAsync(new ScanHistoryPostModel
+            ScanHistoryGetModel? scanHistory = await CreateScanHistoryAsync(new ScanHistoryPostModel
             {
                 UserId = Guid.Parse("0E2BE45F-B2C9-4F2F-9879-4AAAAA17BE65"),
                 PlantId = existingPlant.Id,

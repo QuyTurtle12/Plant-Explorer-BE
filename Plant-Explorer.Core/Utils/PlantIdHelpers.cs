@@ -56,12 +56,15 @@ namespace Plant_Explorer.Core.Utils
         [JsonPropertyName("species")]
         public string? Species { get; set; }
     }
-
-
     public class VernacularName
     {
         [JsonPropertyName("vernacularName")]
         public string? Name { get; set; }
+    }
+    public class WikipediaResponse
+    {
+        [JsonPropertyName("extract")]
+        public string Extract { get; set; }
     }
 
 }
