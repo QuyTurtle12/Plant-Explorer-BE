@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Plant_Explorer.Contract.Repositories.ModelViews;
 using Plant_Explorer.Contract.Services.Interface;
 
