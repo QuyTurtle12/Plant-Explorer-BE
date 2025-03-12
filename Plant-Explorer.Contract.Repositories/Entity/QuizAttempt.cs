@@ -4,8 +4,8 @@ namespace Plant_Explorer.Contract.Repositories.Entity
 {
     public class QuizAttempt : BaseEntity
     {
-        public string? QuizId { get; set; }
-        public string? UserId { get; set; }
+        public Guid? QuizId { get; set; }
+        public Guid? UserId { get; set; }
 
        
         public DateTime AttemptTime { get; set; }

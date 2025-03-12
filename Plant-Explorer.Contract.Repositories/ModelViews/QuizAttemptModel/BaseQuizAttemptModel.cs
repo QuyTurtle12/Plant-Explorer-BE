@@ -9,8 +9,8 @@ namespace Plant_Explorer.Contract.Repositories.ModelViews.QuizAttemptModel
 {
     public class BaseQuizAttemptModel
     {
-        public string? QuizId { get; set; }
-        public string? UserId { get; set; }
+        public Guid QuizId { get; set; }
+        public Guid UserId { get; set; }
         public DateTime AttemptTime { get; set; }
     }
 }

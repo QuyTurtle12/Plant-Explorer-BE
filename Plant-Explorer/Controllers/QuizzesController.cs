@@ -120,4 +120,4 @@ namespace Plant_Explorer.Controllers
     }
 }
 
-    // Similar controllers for QuestionsController, OptionsController, and QuizAttemptsController would follow the same pattern
+   

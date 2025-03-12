@@ -108,8 +108,8 @@ namespace Plant_Explorer.Services.Services
                 GetQuizModel quizModel = _mapper.Map<GetQuizModel>(item);
 
                 // Format audit fields
-                quizModel.CreatedTime = item.CreatedTime.ToString("dd-MM-yyyy");
-                quizModel.LastUpdatedTime = item.LastUpdatedTime.ToString("dd-MM-yyyy");
+                quizModel.CreatedTime = item.CreatedTime?.ToString("dd-MM-yyyy");
+                quizModel.LastUpdatedTime = item.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
                 return quizModel;
             }).ToList();
@@ -135,8 +135,8 @@ namespace Plant_Explorer.Services.Services
             GetQuizModel quizModel = _mapper.Map<GetQuizModel>(quiz);
 
             // Format audit fields
-            quizModel.CreatedTime = quiz.CreatedTime.ToString("dd-MM-yyyy");
-            quizModel.LastUpdatedTime = quiz.LastUpdatedTime.ToString("dd-MM-yyyy");
+            quizModel.CreatedTime = quiz.CreatedTime?.ToString("dd-MM-yyyy");
+            quizModel.LastUpdatedTime = quiz.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
             return quizModel;
         }

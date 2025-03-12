@@ -15,7 +15,8 @@ namespace Plant_Explorer.Services.MapperProfile
         
             public OptionProfile()
             {
-                CreateMap<GetOptionModel, Option>().ReverseMap();
+                CreateMap<GetOptionModel, Option>();
+                CreateMap<Option, GetOptionModel>();
                 CreateMap<PostOptionModel, Option>().ReverseMap();
                 CreateMap<PutOptionModel, Option>().ReverseMap();
             }

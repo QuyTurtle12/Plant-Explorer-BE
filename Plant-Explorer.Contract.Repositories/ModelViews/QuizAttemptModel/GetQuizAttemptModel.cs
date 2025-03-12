@@ -9,7 +9,7 @@ namespace Plant_Explorer.Contract.Repositories.ModelViews.QuizAttemptModel
 {
     public class GetQuizAttemptModel : BaseQuizAttemptModel
     {
-        public string Id { get; set; } = string.Empty;
+        public Guid Id { get; set; } 
         public string CreatedTime { get; set; } = string.Empty;
         public string LastUpdatedTime { get; set; } = string.Empty;
     }

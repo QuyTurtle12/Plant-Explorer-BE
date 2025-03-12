@@ -129,8 +129,8 @@ namespace Plant_Explorer.Services.Services
                 GetBadgeModel badgeModel = _mapper.Map<GetBadgeModel>(item);
 
                 // Format audit fields
-                badgeModel.CreatedTime = item.CreatedTime.ToString("dd-MM-yyyy");
-                badgeModel.LastUpdatedTime = item.LastUpdatedTime.ToString("dd-MM-yyyy");
+                badgeModel.CreatedTime = item.CreatedTime?.ToString("dd-MM-yyyy");
+                badgeModel.LastUpdatedTime = item.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
                 return badgeModel;
             }).ToList();
@@ -156,8 +156,8 @@ namespace Plant_Explorer.Services.Services
             GetBadgeModel badgeModel = _mapper.Map<GetBadgeModel>(badge);
 
             // Format audit fields
-            badgeModel.CreatedTime = badge.CreatedTime.ToString("dd-MM-yyyy");
-            badgeModel.LastUpdatedTime = badge.LastUpdatedTime.ToString("dd-MM-yyyy");
+            badgeModel.CreatedTime = badge.CreatedTime?.ToString("dd-MM-yyyy");
+            badgeModel.LastUpdatedTime = badge.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
             return badgeModel;
         }

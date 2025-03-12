@@ -109,7 +109,7 @@ namespace Plant_Explorer.Services.Services
                 Guid.TryParse(quizId, out Guid id);
 
                 // Filter by quiz id
-                query = query.Where(q => q.QuizId == id.ToString());
+                query = query.Where(q => q.QuizId.Equals(id.ToString()));
             }
 
             // Skip deleted item
@@ -128,8 +128,8 @@ namespace Plant_Explorer.Services.Services
                 GetQuestionModel questionModel = _mapper.Map<GetQuestionModel>(item);
 
                 // Format audit fields
-                questionModel.CreatedTime = item.CreatedTime.ToString("dd-MM-yyyy");
-                questionModel.LastUpdatedTime = item.LastUpdatedTime.ToString("dd-MM-yyyy");
+                questionModel.CreatedTime = item.CreatedTime?.ToString("dd-MM-yyyy");
+                questionModel.LastUpdatedTime = item.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
                 return questionModel;
             }).ToList();
@@ -155,8 +155,8 @@ namespace Plant_Explorer.Services.Services
             GetQuestionModel questionModel = _mapper.Map<GetQuestionModel>(question);
 
             // Format audit fields
-            questionModel.CreatedTime = question.CreatedTime.ToString("dd-MM-yyyy");
-            questionModel.LastUpdatedTime = question.LastUpdatedTime.ToString("dd-MM-yyyy");
+            questionModel.CreatedTime = question.CreatedTime?.ToString("dd-MM-yyyy");
+            questionModel.LastUpdatedTime = question.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
             return questionModel;
         }
@@ -173,7 +173,7 @@ namespace Plant_Explorer.Services.Services
             GeneralValidation(updatedQuestion);
 
             // Validate if quiz exists
-            if (!string.IsNullOrWhiteSpace(updatedQuestion.QuizId) && updatedQuestion.QuizId != existingQuestion.QuizId)
+            if (!string.IsNullOrWhiteSpace(updatedQuestion.QuizId) && !updatedQuestion.QuizId.Equals( existingQuestion.QuizId))
             {
                 Guid quizId = Guid.Parse(updatedQuestion.QuizId);
                 bool quizExists = await _unitOfWork.GetRepository<Quiz>().Entities

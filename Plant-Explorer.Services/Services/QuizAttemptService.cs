@@ -24,9 +24,9 @@ public class QuizAttemptService : IQuizAttemptService
     public async Task CreateQuizAttemptAsync(PostQuizAttemptModel newAttempt)
     {
         // Validate if quiz exists
-        if (!string.IsNullOrWhiteSpace(newAttempt.QuizId))
+        if (!string.IsNullOrWhiteSpace(newAttempt.QuizId.ToString()))
         {
-            Guid quizId = Guid.Parse(newAttempt.QuizId);
+            Guid quizId = newAttempt.QuizId;
             bool quizExists = await _unitOfWork.GetRepository<Quiz>().Entities
                                     .AnyAsync(q => q.Id == quizId && !q.DeletedTime.HasValue);
 
@@ -39,7 +39,7 @@ public class QuizAttemptService : IQuizAttemptService
         }
 
         // Validate user ID
-        if (string.IsNullOrWhiteSpace(newAttempt.UserId))
+        if (string.IsNullOrWhiteSpace(newAttempt.UserId.ToString()))
         {
             throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "User ID must not be empty!");
         }
@@ -73,7 +73,7 @@ public class QuizAttemptService : IQuizAttemptService
         if (!string.IsNullOrWhiteSpace(userId))
         {
             // Filter by user id
-            query = query.Where(qa => qa.UserId == userId);
+            query = query.Where(qa => qa.UserId.Equals(userId));
         }
 
         // Check if user want to filter by quizId
@@ -83,7 +83,7 @@ public class QuizAttemptService : IQuizAttemptService
             Guid.TryParse(quizId, out Guid id);
 
             // Filter by quiz id
-            query = query.Where(qa => qa.QuizId == id.ToString());
+            query = query.Where(qa => qa.QuizId.Equals( id.ToString()));
         }
 
         // Skip deleted item
@@ -102,8 +102,8 @@ public class QuizAttemptService : IQuizAttemptService
             GetQuizAttemptModel quizAttemptModel = _mapper.Map<GetQuizAttemptModel>(item);
 
             // Format audit fields
-            quizAttemptModel.CreatedTime = item.CreatedTime.ToString("dd-MM-yyyy");
-            quizAttemptModel.LastUpdatedTime = item.LastUpdatedTime.ToString("dd-MM-yyyy");
+            quizAttemptModel.CreatedTime = item.CreatedTime?.ToString("dd-MM-yyyy");
+            quizAttemptModel.LastUpdatedTime = item.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
             return quizAttemptModel;
         }).ToList();
@@ -129,8 +129,8 @@ public class QuizAttemptService : IQuizAttemptService
         GetQuizAttemptModel quizAttemptModel = _mapper.Map<GetQuizAttemptModel>(quizAttempt);
 
         // Format audit fields
-        quizAttemptModel.CreatedTime = quizAttempt.CreatedTime.ToString("dd-MM-yyyy");
-        quizAttemptModel.LastUpdatedTime = quizAttempt.LastUpdatedTime.ToString("dd-MM-yyyy");
+        quizAttemptModel.CreatedTime = quizAttempt.CreatedTime?.ToString("dd-MM-yyyy");
+        quizAttemptModel.LastUpdatedTime = quizAttempt.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
         return quizAttemptModel;
     }

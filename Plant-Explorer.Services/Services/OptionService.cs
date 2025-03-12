@@ -27,11 +27,12 @@ public class OptionService : IOptionService
     public async Task CreateOptionAsync(PostOptionModel newOption)
     {
         GeneralValidation(newOption);
+        var questionId = newOption.QuestionId;
 
         // Validate if question exists
-        if (!string.IsNullOrWhiteSpace(newOption.QuestionId))
+        if (!string.IsNullOrWhiteSpace(newOption.QuestionId.ToString()))
         {
-            Guid questionId = Guid.Parse(newOption.QuestionId);
+           
             bool questionExists = await _unitOfWork.GetRepository<Question>().Entities
                                         .AnyAsync(q => q.Id == questionId && !q.DeletedTime.HasValue);
 
@@ -107,7 +108,7 @@ public class OptionService : IOptionService
             Guid.TryParse(questionId, out Guid id);
 
             // Filter by question id
-            query = query.Where(o => o.QuestionId == id.ToString());
+            query = query.Where(o => o.QuestionId.Equals(id.ToString()));
         }
 
         // Skip deleted item
@@ -123,11 +124,11 @@ public class OptionService : IOptionService
         IReadOnlyCollection<GetOptionModel> responseItems = resultQuery.Items.Select(item =>
         {
             // Map Option to ModelView in order to filter unnecessary data 
-            GetOptionModel optionModel = _mapper.Map<GetOptionModel>(item);
+            GetOptionModel optionModel = Plant_Explorer.Mapping.OptionMapper.ToGetOptionModel(item);
 
             // Format audit fields
-            optionModel.CreatedTime = item.CreatedTime.ToString("dd-MM-yyyy");
-            optionModel.LastUpdatedTime = item.LastUpdatedTime.ToString("dd-MM-yyyy");
+            optionModel.CreatedTime = item.CreatedTime?.ToString("dd-MM-yyyy");
+            optionModel.LastUpdatedTime = item.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
             return optionModel;
         }).ToList();
@@ -150,11 +151,11 @@ public class OptionService : IOptionService
         // Validate if option is existed
         if (option == null || option.DeletedTime.HasValue) throw new ErrorException(StatusCodes.Status404NotFound, ResponseCodeConstants.NOT_FOUND, "Option not found!");
 
-        GetOptionModel optionModel = _mapper.Map<GetOptionModel>(option);
+        GetOptionModel optionModel = Plant_Explorer.Mapping.OptionMapper.ToGetOptionModel(option);
 
         // Format audit fields
-        optionModel.CreatedTime = option.CreatedTime.ToString("dd-MM-yyyy");
-        optionModel.LastUpdatedTime = option.LastUpdatedTime.ToString("dd-MM-yyyy");
+        optionModel.CreatedTime = option.CreatedTime?.ToString("dd-MM-yyyy");
+        optionModel.LastUpdatedTime = option.LastUpdatedTime?.ToString("dd-MM-yyyy");
 
         return optionModel;
     }
@@ -171,9 +172,9 @@ public class OptionService : IOptionService
         GeneralValidation(updatedOption);
 
         // Validate if question exists
-        if (!string.IsNullOrWhiteSpace(updatedOption.QuestionId) && updatedOption.QuestionId != existingOption.QuestionId)
+        if (!string.IsNullOrWhiteSpace(updatedOption.QuestionId.ToString()) && updatedOption.QuestionId.Equals(existingOption.QuestionId))
         {
-            Guid questionId = Guid.Parse(updatedOption.QuestionId);
+            Guid questionId = Guid.Parse(updatedOption.QuestionId.ToString());
             bool questionExists = await _unitOfWork.GetRepository<Question>().Entities
                                         .AnyAsync(q => q.Id == questionId && !q.DeletedTime.HasValue);
 
@@ -195,6 +196,6 @@ public class OptionService : IOptionService
     private void GeneralValidation(BaseOptionModel option)
     {
         // Validate option's name
-        if (string.IsNullOrWhiteSpace(option.Name)) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Name must not be empty!");
+       // if (string.IsNullOrWhiteSpace(option.Name)) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Name must not be empty!");
     }
 }

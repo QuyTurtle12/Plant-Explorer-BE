@@ -47,6 +47,10 @@ namespace Plant_Explorer.Services
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IAvatarService, AvatarService>();
             services.AddScoped<IPlantImageService, PlantImageService>();
+            services.AddScoped<IQuizService, QuizService>();
+            services.AddScoped<IQuizAttemptService, QuizAttemptService>();
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IOptionService, OptionService>();
 
         }
     }

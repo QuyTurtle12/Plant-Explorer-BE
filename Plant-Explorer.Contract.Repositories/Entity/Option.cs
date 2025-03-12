@@ -6,11 +6,12 @@ namespace Plant_Explorer.Contract.Repositories.Entity
 {
     public class Option : BaseEntity
     {
-        public string? QuestionId { get; set; }
-        public string? Context { get; set; }
+        public Guid QuestionId { get; set; }
+        public string Context { get; set; }
         public bool IsCorrect { get; set; }
+       
 
         // Navigation Properties
-        public virtual Question? Question { get; set; }
+        public virtual Question Question { get; set; }
     }
 }
