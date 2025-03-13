@@ -40,7 +40,11 @@ namespace Plant_Explorer.Middleware
                     , "/api/favoriteplants"
                     , "/api/auth/public"
                     , "/api/auth/authenticated"
-                    , "/api/image/get" } },
+                    , "/api/image/get"
+                    , "api/quizzes"
+                    , "api/options"
+                    , "api/quizattempts"
+                    , "api/questions" } },
 
                     { "POST", new List<string>() { "/api/scanhistory"
                     , "/api/plantapplication"
@@ -56,7 +60,11 @@ namespace Plant_Explorer.Middleware
                     , "/api/favoriteplants"
                     , "/api/auth/login"
                     , "/api/auth/register"
-                    , "/api/image/upload" } },
+                    , "/api/image/upload"
+                    , "api/quizzes"
+                    , "api/options"
+                    , "api/quizattempts"
+                    , "api/questions" } },
 
                     { "PUT", new List<string>() { "/api/scanhistory"
                     , "/api/plantapplication"
@@ -66,7 +74,11 @@ namespace Plant_Explorer.Middleware
                     , "/api/Plant"
                     , "/api/users"
                     , "/api/badges"
-                    , "/api/userpoints"  } },
+                    , "/api/userpoints"
+                    , "api/quizzes"
+                    , "api/options"
+                    , "api/quizattempts"
+                    , "api/questions"  } },
 
                     { "DELETE", new List<string>() { "/api/scanhistory"
                     , "/api/plantapplication"
@@ -76,7 +88,11 @@ namespace Plant_Explorer.Middleware
                     , "/api/Plant"
                     , "/api/users"
                     , "/api/badges"
-                    , "/api/favoriteplants" } },
+                    , "/api/favoriteplants"
+                    , "api/quizzes"
+                    , "api/options"
+                    , "api/quizattempts"
+                    , "api/questions"  } },
                 //    { "PATCH", new List<string>() {  } },
                 //    { "CONTROLLER", new List<string>() { "" } }
             };

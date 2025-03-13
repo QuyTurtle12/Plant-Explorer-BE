@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
+using Plant_Explorer.Contract.Repositories.ModelViews.Quiz;
+
 
 namespace Plant_Explorer.Repositories.Base
 {

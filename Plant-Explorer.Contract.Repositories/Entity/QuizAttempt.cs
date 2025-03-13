@@ -1,20 +1,20 @@
-﻿namespace Plant_Explorer.Contract.Repositories.Entity
+﻿using Plant_Explorer.Contract.Repositories.Base;
+
+namespace Plant_Explorer.Contract.Repositories.Entity
 {
-    public class QuizAttempt
+    public class QuizAttempt : BaseEntity
     {
-        public Guid Id { get; set; }
-        public Guid QuizId { get; set; }
-        public Guid UserId { get; set; }
+        public Guid? QuizId { get; set; }
+        public Guid? UserId { get; set; }
+
+       
         public DateTime AttemptTime { get; set; }
-        public int TotalPoint;
 
         // Navigation Properties
-        public virtual ApplicationUser? User { get; set; }
         public virtual Quiz? Quiz { get; set; }
 
-        public QuizAttempt() 
-        {
-            Id = Guid.NewGuid();    
-        }
+        public virtual ApplicationUser User { get; set; }
     }
+
+    
 }

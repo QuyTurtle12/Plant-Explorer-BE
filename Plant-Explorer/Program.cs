@@ -13,12 +13,11 @@ using System.IdentityModel.Tokens.Jwt;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
+using Plant_Explorer.Services.Services;
+using Plant_Explorer.Contract.Services.Interface;
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-FirebaseApp.Create(new AppOptions()
-{
-    Credential = GoogleCredential.FromFile("plant-explorer-95afb-firebase-adminsdk-fbsvc-f5232f5fc8.json"),
-});
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +44,11 @@ builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<IQuizAttemptService, QuizAttemptService>();
+builder.Services.AddScoped<IQuizService, QuizService>();
+
+
 // Bind JwtSettings from configuration
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 

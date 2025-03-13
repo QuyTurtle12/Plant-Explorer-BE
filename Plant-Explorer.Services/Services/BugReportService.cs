@@ -102,7 +102,7 @@ namespace Plant_Explorer.Services.Services
                 // Map BugReport to ModelView in order to filter unnecessary data 
                 GetBugReportModel bugReportModel = _mapper.Map<GetBugReportModel>(item);
 
-                bugReportModel.CreatedTime = item.CreatedTime.ToString("dd-MM-yyyy");
+                bugReportModel.CreatedTime = item.CreatedTime?.ToString("dd-MM-yyyy");
 
                 // Get reported user's email
                 bugReportModel.CreatedBy = _unitOfWork.GetRepository<ApplicationUser>().Entities
