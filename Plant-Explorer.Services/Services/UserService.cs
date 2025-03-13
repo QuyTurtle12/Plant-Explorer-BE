@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
+using Plant_Explorer.Contract.Repositories.ModelViews.AuthModel;
 using Plant_Explorer.Contract.Repositories.ModelViews.UserModel;
-using Plant_Explorer.Contract.Repositories.ModelViews.UserPointModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
 using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Core.Constants;
@@ -21,6 +22,8 @@ namespace Plant_Explorer.Services.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserPointService _userPointService;
         private readonly ITokenService _tokenService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
         public const string children = "Children";
         public const string staff = "Staff";
@@ -29,12 +32,14 @@ namespace Plant_Explorer.Services.Services
         public const int INACTIVE = 0;
         public const int ACTIVE = 1;
 
-        public UserService(IMapper mapper, IUnitOfWork unitOfWork, IUserPointService userPointService, ITokenService tokenService)
+        public UserService(IMapper mapper, IUnitOfWork unitOfWork, IUserPointService userPointService, ITokenService tokenService, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _userPointService = userPointService;
             _tokenService = tokenService;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<PaginatedList<GetUserModel>> GetAllUsersAsync(int index, int pageSize, string? idSearch, string? nameSearch, string? emailSearch, EnumRole? role)
@@ -202,44 +207,84 @@ namespace Plant_Explorer.Services.Services
             return result;
         }
 
-        public async Task CreateUserAsync(PostUserModel newUser)
-        {
-            // Validate input
-            GeneralValidation(newUser);
-            MailValidation(newUser);
+        //public async Task CreateUserAsync(PostUserModel newUser)
+        //{
+        //    // Validate input
+        //    GeneralValidation(newUser);
+        //    MailValidation(newUser);
 
-            if(newUser.Password != newUser.ConfirmedPassword) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Password does not match with Confirmed Password");
+        //    if(newUser.Password != newUser.ConfirmedPassword) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Password does not match with Confirmed Password");
 
-            // Mapping model to entities
-            ApplicationUser user = _mapper.Map<ApplicationUser>(newUser);
+        //    // Mapping model to entities
+        //    ApplicationUser user = _mapper.Map<ApplicationUser>(newUser);
 
-            // Get role Id
-            Guid? roleId = await _unitOfWork.GetRepository<ApplicationRole>().Entities
-                                    .Where(r => r.Name!.Equals(newUser.RoleName))
-                                    .Select(r => r.Id)
-                                    .FirstOrDefaultAsync();
+        //    // Get role Id
+        //    Guid? roleId = await _unitOfWork.GetRepository<ApplicationRole>().Entities
+        //                            .Where(r => r.Name!.Equals(newUser.RoleName))
+        //                            .Select(r => r.Id)
+        //                            .FirstOrDefaultAsync();
 
-            // Validate role
-            if (!roleId.HasValue) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Invalid Role");
+        //    // Validate role
+        //    if (!roleId.HasValue) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Invalid Role");
 
-            user.RoleId = roleId.Value;
+        //    user.RoleId = roleId.Value;
 
-            // Hash user password
-            string HashedPassword = HashPasswordService.HashPasswordBcrypt(newUser.Password);
-            user.PasswordHash = HashedPassword;
+        //    // Hash user password
+        //    string HashedPassword = HashPasswordService.HashPasswordBcrypt(newUser.Password);
+        //    user.PasswordHash = HashedPassword;
 
-            // Add new user to database and save
-            await _unitOfWork.GetRepository<ApplicationUser>().InsertAsync(user);
-            await _unitOfWork.SaveAsync();
+        //    // Add new user to database and save
+        //    await _unitOfWork.GetRepository<ApplicationUser>().InsertAsync(user);
+        //    await _unitOfWork.SaveAsync();
 
-            // Create user point if user is children
-            if (newUser.RoleName == EnumRole.Children.ToString())
-            {
-                PostUserPointModel newUserPoint = new PostUserPointModel();
-                newUserPoint.UserId = user.Id.ToString();
-                await _userPointService.CreateUserPointAsync(newUserPoint);
-            }
+        //    // Create user point if user is children
+        //    if (newUser.RoleName == EnumRole.Children.ToString())
+        //    {
+        //        PostUserPointModel newUserPoint = new PostUserPointModel();
+        //        newUserPoint.UserId = user.Id.ToString();
+        //        await _userPointService.CreateUserPointAsync(newUserPoint);
+        //    }
             
+        //}
+
+        public async Task CreateUserAsync(RegisterRequest registerRequest)
+        {
+            if (registerRequest.Password != registerRequest.ConfirmPassword)
+            {
+                throw new Exception("Passwords do not match.");
+            }
+
+            var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email);
+            if (existingUser != null)
+            {
+                throw new Exception("Email is already registered.");
+            }
+
+            // Look up the default role 
+            var defaultRole = await _roleManager.FindByNameAsync("Staff");
+            if (defaultRole == null)
+            {
+                throw new Exception("Default role not found. Please contact support.");
+            }
+
+            // Create a new ApplicationUser with a valid RoleId.
+            var newUser = new ApplicationUser
+            {
+                Email = registerRequest.Email,
+                UserName = registerRequest.Email,
+                Name = registerRequest.Name,
+                RoleId = defaultRole.Id
+            };
+
+            var result = await _userManager.CreateAsync(newUser, registerRequest.Password);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                throw new Exception(errors);
+            }
+
+            // Optionally, assign the role to the user via Identity.
+            await _userManager.AddToRoleAsync(newUser, defaultRole.Name!);
         }
 
         public async Task UpdateUserAsync(string id, PutUserModel updatedUser)

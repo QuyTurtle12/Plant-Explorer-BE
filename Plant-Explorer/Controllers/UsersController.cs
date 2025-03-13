@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Plant_Explorer.Contract.Repositories.Base;
+using Plant_Explorer.Contract.Repositories.ModelViews.AuthModel;
 using Plant_Explorer.Contract.Repositories.ModelViews.UserModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
 using Plant_Explorer.Contract.Services.Interface;
@@ -72,18 +73,18 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="newUser"></param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("children")]
-        public async Task<IActionResult> CreateChildren(PostUserModel newUser)
-        {
-            newUser.RoleName = "Children";
-            await _userService.CreateUserAsync(newUser);
-            return Ok(new BaseResponseModel(
-                statusCode: StatusCodes.Status201Created,
-                code: ResponseCodeConstants.SUCCESS,
-                message: "Create a new child successfully"
-                ));
-        }
+        //[HttpPost]
+        //[Route("children")]
+        //public async Task<IActionResult> CreateChildren(PostUserModel newUser)
+        //{
+        //    newUser.RoleName = "Children";
+        //    await _userService.CreateUserAsync(newUser);
+        //    return Ok(new BaseResponseModel(
+        //        statusCode: StatusCodes.Status201Created,
+        //        code: ResponseCodeConstants.SUCCESS,
+        //        message: "Create a new child successfully"
+        //        ));
+        //}
 
         /// <summary>
         /// Create a new staff
@@ -92,9 +93,8 @@ namespace Plant_Explorer.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("staff")]
-        public async Task<IActionResult> CreateStaff(PostUserModel newUser)
+        public async Task<IActionResult> CreateStaff(RegisterRequest newUser)
         {
-            newUser.RoleName = "Staff";
             await _userService.CreateUserAsync(newUser);
             return Ok(new BaseResponseModel(
                 statusCode: StatusCodes.Status201Created,
