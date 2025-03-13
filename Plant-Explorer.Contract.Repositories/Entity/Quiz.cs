@@ -1,9 +1,4 @@
 ﻿using Plant_Explorer.Contract.Repositories.Base;
-using System.Diagnostics.Contracts;
-
-using Plant_Explorer.Contract.Repositories.Base;
-using System;
-using System.Collections.Generic;
 
 namespace Plant_Explorer.Contract.Repositories.Entity
 {

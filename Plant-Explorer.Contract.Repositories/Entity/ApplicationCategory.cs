@@ -6,6 +6,5 @@ namespace Plant_Explorer.Contract.Repositories.Entity
     {
         // Navigation Properties
         public virtual ICollection<PlantApplication>? PlantApplications { get; set; }
-        public virtual ICollection<Quiz>? Quizzes { get; set; }
     }
 }

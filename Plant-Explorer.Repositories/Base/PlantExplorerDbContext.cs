@@ -43,6 +43,10 @@ namespace Plant_Explorer.Repositories.Base
                 }
             }
 
+            builder.Entity<ScanHistory>()
+                .Property(sc => sc.Probability)
+                .HasPrecision(18, 2);
+
             // ApplicationUser - ApplicationRole (One-to-many)
             builder.Entity<ApplicationUser>(b =>
             {
