@@ -4,11 +4,6 @@ using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews;
 using Plant_Explorer.Contract.Services.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plant_Explorer.Services.Services
 {
@@ -41,7 +36,7 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid characteristic ID");
 
-            PlantCharacteristic characteristic = await _unitOfWork.GetRepository<PlantCharacteristic>().GetByIdAsync(id);
+            PlantCharacteristic? characteristic = await _unitOfWork.GetRepository<PlantCharacteristic>().GetByIdAsync(id);
 
 
             PlantCharacteristicGetModel result = _mapper.Map<PlantCharacteristicGetModel>(characteristic);
@@ -71,7 +66,7 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid characteristic ID");
 
-            PlantCharacteristic characteristicEntity = await _unitOfWork.GetRepository<PlantCharacteristic>().GetByIdAsync(id);
+            PlantCharacteristic? characteristicEntity = await _unitOfWork.GetRepository<PlantCharacteristic>().GetByIdAsync(id);
             if (characteristicEntity == null)
                 return null;
 
@@ -91,7 +86,7 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid characteristic ID");
 
-            PlantCharacteristic characteristicEntity = await _unitOfWork.GetRepository<PlantCharacteristic>().GetByIdAsync(id);
+            PlantCharacteristic? characteristicEntity = await _unitOfWork.GetRepository<PlantCharacteristic>().GetByIdAsync(id);
             if (characteristicEntity == null)
                 return false;
 

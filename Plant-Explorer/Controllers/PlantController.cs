@@ -85,8 +85,8 @@ namespace Plant_Explorer.Controllers
         {
             var result = await _plantService.SoftDeletePlantAsync(id);
             if (!result)
-                return NotFound();
-            return NoContent();
+                return BadRequest("Delete fail");
+            return Ok("Delete success");
         }
         /// <summary>
         /// Search plants by name/scientific name.

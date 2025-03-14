@@ -53,10 +53,12 @@ namespace Plant_Explorer.Services.Services
 
         public async Task<PlantGetModel?> UpdatePlantAsync(Guid id, PlantPutModel model)
         {
-            Plant plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
+            Plant? plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
             if (plantEntity == null || plantEntity.DeletedTime != null)
                 return null;
 
+            if (!string.IsNullOrWhiteSpace(model.Name))
+                plantEntity.Name = model.Name;
             if (!string.IsNullOrWhiteSpace(model.ScientificName))
                 plantEntity.ScientificName = model.ScientificName;
             if (!string.IsNullOrWhiteSpace(model.Family))
@@ -75,9 +77,18 @@ namespace Plant_Explorer.Services.Services
 
         public async Task<bool> DeletePlantAsync(Guid id)
         {
-            Plant plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
+            Plant? plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
             if (plantEntity == null || plantEntity.DeletedTime != null)
+            {
+                Console.WriteLine("Plant not found");
                 return false;
+            }
+                
+            if (await IsInUsed(id))
+            {
+                Console.WriteLine("Plant is in used, cannot delete");
+                return false;
+            }
 
             await _unitOfWork.GetRepository<Plant>().DeleteAsync(plantEntity);
             await _unitOfWork.SaveAsync();
@@ -86,7 +97,7 @@ namespace Plant_Explorer.Services.Services
         public async Task<PlantGetModel?> GetPlantByScientificName(string scientificName)
         {
             Plant? plant = await _unitOfWork.GetRepository<Plant>().Entities
-                .Where(p => (p.ScientificName == scientificName || p.ScientificName.Equals(scientificName)) 
+                .Where(p => (p.ScientificName == scientificName || p.ScientificName!.Equals(scientificName))
                 && p.DeletedTime == null)
                 .FirstOrDefaultAsync();
 
@@ -96,7 +107,7 @@ namespace Plant_Explorer.Services.Services
         {
             List<Plant> plantList = await _unitOfWork.GetRepository<Plant>().Entities
                 .Where(p => (p.Name.ToLower().Contains(searchStringName.ToLower())
-                || p.ScientificName.ToLower().Contains(searchStringName.ToLower()))
+                || p.ScientificName!.ToLower().Contains(searchStringName.ToLower()))
                 && p.DeletedTime == null)
                 .ToListAsync();
 
@@ -105,9 +116,15 @@ namespace Plant_Explorer.Services.Services
 
         public async Task<bool> SoftDeletePlantAsync(Guid id)
         {
-            Plant plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
+            Plant? plantEntity = await _unitOfWork.GetRepository<Plant>().GetByIdAsync(id);
             if (plantEntity == null || plantEntity.DeletedTime != null)
                 return false;
+            if(await IsInUsed(id))
+            {
+                Console.WriteLine("Plant is in used, cannot delete");
+                return false;
+            }
+
             //Soft delete
             plantEntity.Status = 0;
             plantEntity.LastUpdatedTime = CoreHelper.SystemTimeNow;
@@ -116,6 +133,21 @@ namespace Plant_Explorer.Services.Services
             await _unitOfWork.GetRepository<Plant>().UpdateAsync(plantEntity);
             await _unitOfWork.SaveAsync();
             return true;
+        }
+        private async Task<bool> IsInUsed(Guid id)
+        {
+            if (await _unitOfWork.GetRepository<PlantCharacteristic>().Entities
+                .AnyAsync(p => p.PlantId == id))
+            {
+                return true;
+            }
+            if (await _unitOfWork.GetRepository<PlantApplication>().Entities
+                .AnyAsync(p => p.PlantId == id))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

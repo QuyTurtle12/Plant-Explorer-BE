@@ -21,9 +21,9 @@ namespace Plant_Explorer.Services.Services
 
         public async Task<IEnumerable<CharacteristicCategoryGetModel>> GetAllCategoriesAsync()
         {
-            List<CharacteristicCategory> categories = (List<CharacteristicCategory>) await _unitOfWork.GetRepository<CharacteristicCategory>()
+            List<CharacteristicCategory> categories = await _unitOfWork.GetRepository<CharacteristicCategory>()
                 .Entities
-                .Where(c => c.DeletedTime != null)
+                .Where(c => c.DeletedTime == null)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<CharacteristicCategoryGetModel>>(categories);
         }
@@ -33,7 +33,7 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            CharacteristicCategory category = await _unitOfWork.GetRepository<CharacteristicCategory>()
+            CharacteristicCategory? category = await _unitOfWork.GetRepository<CharacteristicCategory>()
                 .Entities
                 .Where(c => c.Id == id && c.DeletedTime == null)
                 .FirstOrDefaultAsync();
@@ -57,7 +57,7 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            CharacteristicCategory categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
+            CharacteristicCategory? categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
             if (categoryEntity == null || categoryEntity.DeletedTime != null)
                 return null;
 
@@ -74,9 +74,18 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            CharacteristicCategory categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
+            CharacteristicCategory? categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
             if (categoryEntity == null || categoryEntity.DeletedTime != null)
+            {
+                Console.WriteLine("Category not found");
                 return false;
+            }
+            if (await IsInUsed(id))
+            {
+                Console.WriteLine("Category is in used");
+                return false;
+            }
+
 
             await _unitOfWork.GetRepository<CharacteristicCategory>().DeleteAsync(categoryEntity);
             await _unitOfWork.SaveAsync();
@@ -87,9 +96,18 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            CharacteristicCategory categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
+            CharacteristicCategory? categoryEntity = await _unitOfWork.GetRepository<CharacteristicCategory>().GetByIdAsync(id);
             if (categoryEntity == null || categoryEntity.DeletedTime != null)
+            {
+                Console.WriteLine("Category not found");
                 return false;
+            }
+            if(await IsInUsed(id))
+            {
+                Console.WriteLine("Category is in used");
+                return false;
+            }
+
             // Soft delete
             categoryEntity.Status = 0;
             categoryEntity.LastUpdatedTime = CoreHelper.SystemTimeNow;
@@ -98,6 +116,11 @@ namespace Plant_Explorer.Services.Services
             await _unitOfWork.GetRepository<CharacteristicCategory>().UpdateAsync(categoryEntity);
             await _unitOfWork.SaveAsync();
             return true;
+        }
+        private async Task<bool> IsInUsed(Guid id)
+        {
+            return await _unitOfWork.GetRepository<PlantCharacteristic>().Entities
+                .AnyAsync(pc => pc.CharacteristicCategoryId == id);
         }
     }
 }

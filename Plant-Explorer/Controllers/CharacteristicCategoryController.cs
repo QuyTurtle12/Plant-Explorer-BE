@@ -83,8 +83,8 @@ namespace Plant_Explorer.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var deleted = await _characteristicCategoryService.SoftDeleteCharacteristicCategoryAsync(id);
-            if (!deleted) return NotFound();
-            return NoContent();
+            if (!deleted) return BadRequest("Delete failed");
+            return Ok("Delete success");
         }
     }
 }

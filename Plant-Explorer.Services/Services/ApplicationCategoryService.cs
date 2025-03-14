@@ -34,7 +34,7 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            ApplicationCategory category = await _unitOfWork.GetRepository<ApplicationCategory>()
+            ApplicationCategory? category = await _unitOfWork.GetRepository<ApplicationCategory>()
                 .Entities
                 .Where(c => c.DeletedTime == null && c.Id == id)
                 .FirstOrDefaultAsync();
@@ -58,7 +58,7 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            ApplicationCategory categoryEntity = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
+            ApplicationCategory? categoryEntity = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
             if (categoryEntity == null || categoryEntity.DeletedTime != null)
                 return null;
 
@@ -66,7 +66,7 @@ namespace Plant_Explorer.Services.Services
                 categoryEntity.Name = model.Name;
 
             _unitOfWork.GetRepository<ApplicationCategory>().Update(categoryEntity);
-            await _unitOfWork.SaveAsync();
+            await _unitOfWork.GetRepository<ApplicationCategory>().SaveAsync();
             return _mapper.Map<ApplicationCategoryGetModel>(categoryEntity);
         }
 
@@ -75,9 +75,17 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            ApplicationCategory categoryEntity = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
+            ApplicationCategory? categoryEntity = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
             if (categoryEntity == null || categoryEntity.DeletedTime != null)
+            {
+                Console.WriteLine("Category not found");
                 return false;
+            }
+            if (await IsInUsed(id))
+            {
+                Console.WriteLine("Category is in used");
+                return false;
+            }
 
             _unitOfWork.GetRepository<ApplicationCategory>().Delete(categoryEntity);
             await _unitOfWork.SaveAsync();
@@ -88,9 +96,17 @@ namespace Plant_Explorer.Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid category ID");
 
-            ApplicationCategory categoryEntity = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
+            ApplicationCategory? categoryEntity = await _unitOfWork.GetRepository<ApplicationCategory>().GetByIdAsync(id);
             if (categoryEntity == null || categoryEntity.DeletedTime != null)
+            {
+                Console.WriteLine("Category not found");
                 return false;
+            }
+            if(await IsInUsed(id))
+            {
+                Console.WriteLine("Category is in used");
+                return false;
+            }
 
             categoryEntity.Status = 0;
             categoryEntity.LastUpdatedTime = CoreHelper.SystemTimeNow;
@@ -99,6 +115,11 @@ namespace Plant_Explorer.Services.Services
             _unitOfWork.GetRepository<ApplicationCategory>().Update(categoryEntity);
             await _unitOfWork.SaveAsync();
             return true;
+        }
+        private async Task<bool> IsInUsed(Guid id)
+        {
+            return await _unitOfWork.GetRepository<PlantApplication>().Entities
+                .AnyAsync(p => p.ApplicationCategoryId == id);
         }
     }
 }

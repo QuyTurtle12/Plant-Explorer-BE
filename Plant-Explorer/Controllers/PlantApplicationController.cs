@@ -82,7 +82,7 @@ namespace Plant_Explorer.Controllers
         {
             var success = await _plantApplicationService.DeleteAsync(id);
             if (!success) return NotFound();
-            return NoContent();
+            return Ok("Delete success");
         }
     }
 }
