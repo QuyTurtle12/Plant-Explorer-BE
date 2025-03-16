@@ -15,7 +15,7 @@ namespace Plant_Explorer.Mapping
                 Id = option.Id, // Convert Guid to string
 
                 // BaseOptionModel properties
-                QuestionId = option.QuestionId, // Convert Guid to string
+                QuestionId = option.QuestionId.ToString(), // Convert Guid to string
                 Context = option.Context ?? string.Empty, // Handle null to match string.Empty default
                 IsCorrect = option.IsCorrect,
 

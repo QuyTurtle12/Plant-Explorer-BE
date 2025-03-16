@@ -41,7 +41,10 @@ public class OptionService : IOptionService
         }
 
         // Mapping model to entities
-        Option option = _mapper.Map<Option>(newOption);
+        Option option = new Option();
+        option.QuestionId = questionId;
+        option.Context = newOption.Context;
+        option.IsCorrect = newOption.IsCorrect;
 
         // Add new option to database and save
         await _unitOfWork.GetRepository<Option>().InsertAsync(option);
@@ -183,7 +186,10 @@ public class OptionService : IOptionService
         }
 
         // Mapping model to entities
-        _mapper.Map(updatedOption, existingOption);
+
+        existingOption.QuestionId = Guid.Parse(updatedOption.QuestionId);
+        existingOption.IsCorrect = updatedOption.IsCorrect;
+        existingOption.Context = updatedOption.Context;
 
         // Update audit field
         existingOption.LastUpdatedTime = CoreHelper.SystemTimeNow;
@@ -197,5 +203,22 @@ public class OptionService : IOptionService
     {
         // Validate option's name
        // if (string.IsNullOrWhiteSpace(option.Name)) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Name must not be empty!");
+    }
+
+    public async Task<bool> IsCorrectOptionAsync(string optionId)
+    {
+        // Validate parameters
+        if (string.IsNullOrWhiteSpace(optionId))
+            throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Option ID must not be empty!");
+
+
+        // Parse IDs
+        Option? option = await _unitOfWork.GetRepository<Option>().GetByIdAsync(Guid.Parse(optionId));
+
+        // Validate if option is existed
+        if (option == null || option.DeletedTime.HasValue) throw new ErrorException(StatusCodes.Status404NotFound, ResponseCodeConstants.NOT_FOUND, "Option not found!");
+        if (option == null)
+            throw new ErrorException(StatusCodes.Status404NotFound, ResponseCodeConstants.NOT_FOUND, "Option not found or does not belong to the specified question!");
+        return option.IsCorrect;
     }
 }

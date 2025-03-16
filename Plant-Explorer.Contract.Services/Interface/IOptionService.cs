@@ -11,7 +11,7 @@ namespace Plant_Explorer.Contract.Services.Interface
     public interface IOptionService
     {
 
-
+        Task<bool> IsCorrectOptionAsync(string optionId);
         Task<PaginatedList<GetOptionModel>> GetAllOptionsAsync(int index, int pageSize, string? idSearch, string? nameSearch, string? questionId);
         Task<GetOptionModel> GetOptionByIdAsync(string id);
         Task CreateOptionAsync(PostOptionModel newOption);

@@ -116,4 +116,25 @@ public class OptionsController : ControllerBase
             message: "Delete an option successfully"
             ));
     }
+
+    /// <summary>
+    /// Check if an option is correct for a specific question
+    /// </summary>
+    /// <param name="optionId">Option ID</param>
+    /// <param name="questionId">Question ID</param>
+    /// <returns>True if the option is correct, false otherwise</returns>
+    [HttpGet]
+    [Route("check-correct")]
+    public async Task<IActionResult> CheckCorrectOption(string optionId)
+    {
+        bool isCorrect = await _optionService.IsCorrectOptionAsync(optionId);
+        return Ok(new BaseResponseModel<bool>(
+            statusCode: StatusCodes.Status200OK,
+            code: ResponseCodeConstants.SUCCESS,
+            data: isCorrect,
+            additionalData: null,
+            message: "Option correctness checked successfully"
+        ));
+    }
+
 }

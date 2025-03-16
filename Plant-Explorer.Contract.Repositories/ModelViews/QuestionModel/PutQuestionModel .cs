@@ -8,7 +8,5 @@ namespace Plant_Explorer.Contract.Repositories.ModelViews.QuestionModel
 {
     public class PutQuestionModel : BaseQuestionModel
     {
-        public string? Content { get; set; }
-        public string? LastUpdatedBy { get; set; }
     }
 }
