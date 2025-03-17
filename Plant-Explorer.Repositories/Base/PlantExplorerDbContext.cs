@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
+using Plant_Explorer.Contract.Repositories.ModelViews.Quiz;
+
 
 namespace Plant_Explorer.Repositories.Base
 {
     public class PlantExplorerDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public PlantExplorerDbContext(DbContextOptions<PlantExplorerDbContext> options)  // Constructor that accepts options
-           : base(options) 
+           : base(options)
         {
 
         }
@@ -40,6 +42,10 @@ namespace Plant_Explorer.Repositories.Base
                     entityType.SetTableName(tableName.Substring(6));
                 }
             }
+
+            builder.Entity<ScanHistory>()
+                .Property(sc => sc.Probability)
+                .HasPrecision(18, 2);
 
             // ApplicationUser - ApplicationRole (One-to-many)
             builder.Entity<ApplicationUser>(b =>
