@@ -86,7 +86,7 @@ namespace Plant_Explorer.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _service.DeleteCharacteristicAsync(id);
-            return success ? NoContent() : NotFound();
+            return success ? Ok("Delete success") : NotFound();
         }
     }
 }
