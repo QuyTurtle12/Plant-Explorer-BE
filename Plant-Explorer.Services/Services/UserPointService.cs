@@ -173,8 +173,23 @@ namespace Plant_Explorer.Services.Services
             UserPoint? existingUserPoint = await _unitOfWork.GetRepository<UserPoint>().Entities
                                                             .Where(u => u.UserId.Equals(Guid.Parse(userId)))
                                                             .FirstOrDefaultAsync();
-            // print error if user doesn't have point
-            if (existingUserPoint == null) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "This user hasn't had point yet");
+
+            // Create user point if user doesn't have point
+            if (existingUserPoint == null)
+            {
+                PostUserPointModel newUserPoint = new PostUserPointModel()
+                {
+                    UserId = userId,
+                };
+
+                // Initialize a new user point
+                await CreateUserPointAsync(newUserPoint);
+
+                // Assigned new user point
+                existingUserPoint = await _unitOfWork.GetRepository<UserPoint>().Entities
+                                                            .Where(u => u.UserId.Equals(Guid.Parse(userId)))
+                                                            .FirstOrDefaultAsync();
+            }
 
             existingUserPoint.Point += updatedUserPoint.AdditionalPoint;
 

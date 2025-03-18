@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Plant_Explorer.Contract.Repositories.ModelViews.AuthModel
+﻿namespace Plant_Explorer.Contract.Repositories.ModelViews.AuthModel
 {
     public class RegisterRequest
     {
@@ -12,6 +6,7 @@ namespace Plant_Explorer.Contract.Repositories.ModelViews.AuthModel
         public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+        public int Age { get; set; }
     }
 
 }

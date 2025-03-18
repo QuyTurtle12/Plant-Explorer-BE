@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
+using Plant_Explorer.Contract.Repositories.ModelViews.QuestionModel;
 using Plant_Explorer.Contract.Repositories.ModelViews.Quiz;
+using Plant_Explorer.Contract.Repositories.ModelViews.QuizAttempt;
 using Plant_Explorer.Contract.Repositories.ModelViews.QuizModel;
+using Plant_Explorer.Contract.Repositories.ModelViews.UserPointModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
 using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Core.Constants;
@@ -17,14 +20,18 @@ namespace Plant_Explorer.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserPointService _userPointService;
+        private readonly IQuizAttemptService _quizAttemptService;
 
         public const int INACTIVE = 0;
         public const int ACTIVE = 1;
 
-        public QuizService(IMapper mapper, IUnitOfWork unitOfWork)
+        public QuizService(IMapper mapper, IUnitOfWork unitOfWork, IUserPointService userPointService, IQuizAttemptService quizAttemptService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _userPointService = userPointService;
+            _quizAttemptService = quizAttemptService;
         }
 
         public async Task CreateQuizAsync(PostQuizModel newQuiz)
@@ -168,7 +175,64 @@ namespace Plant_Explorer.Services.Services
             // Validate quiz's name
             if (string.IsNullOrWhiteSpace(quiz.Name)) throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Name must not be empty!");
         }
-    }
 
-    // Similar implementations for QuestionService, OptionService, and QuizAttemptService would follow the same pattern
+        public async Task<int> AnswerQuizAsync(string quizId, IList<AnswerQuestionModel> answerList)
+        {
+            // Validate if answer is empty
+            if(answerList == null || answerList.Count == 0)
+            {
+                throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "answer must not be empty!");
+            }
+
+            // Number of correct answer that user inputted
+            int point = 0;
+
+            // Check answer
+            foreach (AnswerQuestionModel item in answerList)
+            {
+                // Validate if the question is belong to given quiz
+                Question? question = await _unitOfWork.GetRepository<Question>().Entities
+                                                    .Where(q => q.QuizId.Equals(Guid.Parse(quizId)) && q.Id.Equals(Guid.Parse(item.QuestionId)))
+                                                    .FirstOrDefaultAsync();
+
+                if (question == null) 
+                {
+                    throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, $"There is a mixed question of another quiz in the answer, question id: {item.QuestionId}");
+                }
+
+                // Validate if option is belong to given question and is correct answer
+                Option? option = await _unitOfWork.GetRepository<Option>().Entities
+                                                .Where(o => o.Id.Equals(Guid.Parse(item.OptionId)) && o.QuestionId.Equals(Guid.Parse(item.QuestionId)) && o.IsCorrect == true)
+                                                .FirstOrDefaultAsync();
+
+                // Increase 1 point if answer is correct 
+                if (option != null)
+                {
+                    point += (int)question.Point!;
+                }
+            }
+
+            // Initialize Quiz Attempt Model
+            PostQuizAttemptModel attempt = new PostQuizAttemptModel()
+            {
+                Score = 0,
+                QuizId = Guid.Parse(quizId),
+                AttemptTime = CoreHelper.SystemTimeNow
+            };
+
+            // Create a new user attempt
+            await _quizAttemptService.CreateQuizAttemptAsync(attempt);
+
+            // Initialize point model
+            PutUserPointModel additionalPoint = new PutUserPointModel()
+            {
+                AdditionalPoint = point
+            };
+
+            // Add new point to current logged in child
+            await _userPointService.UpdateUserPointAsync(additionalPoint);
+
+            return point;
+        }
+    }
 }

@@ -6,6 +6,7 @@ using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews.QuizAttempt;
 using Plant_Explorer.Contract.Repositories.ModelViews.QuizAttemptModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
+using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Core.Constants;
 using Plant_Explorer.Core.ExceptionCustom;
 using Plant_Explorer.Services.Services;
@@ -14,11 +15,13 @@ public class QuizAttemptService : IQuizAttemptService
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ITokenService _tokenService;
 
-    public QuizAttemptService(IMapper mapper, IUnitOfWork unitOfWork)
+    public QuizAttemptService(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _tokenService = tokenService;
     }
 
     public async Task CreateQuizAttemptAsync(PostQuizAttemptModel newAttempt)
@@ -38,14 +41,11 @@ public class QuizAttemptService : IQuizAttemptService
             throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "Quiz ID must not be empty!");
         }
 
-        // Validate user ID
-        if (string.IsNullOrWhiteSpace(newAttempt.UserId.ToString()))
-        {
-            throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, "User ID must not be empty!");
-        }
+        string currentUserId = _tokenService.GetCurrentUserId();
 
         // Mapping model to entities
         QuizAttempt quizAttempt = _mapper.Map<QuizAttempt>(newAttempt);
+        quizAttempt.UserId = Guid.Parse(currentUserId);
 
         // Add new quiz attempt to database and save
         await _unitOfWork.GetRepository<QuizAttempt>().InsertAsync(quizAttempt);

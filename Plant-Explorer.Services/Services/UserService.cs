@@ -273,7 +273,8 @@ namespace Plant_Explorer.Services.Services
                 Email = registerRequest.Email,
                 UserName = registerRequest.Email,
                 Name = registerRequest.Name,
-                RoleId = defaultRole.Id
+                RoleId = defaultRole.Id,
+                Age = registerRequest.Age
             };
 
             var result = await _userManager.CreateAsync(newUser, registerRequest.Password);

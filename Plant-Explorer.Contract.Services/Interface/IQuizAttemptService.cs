@@ -1,8 +1,6 @@
 ﻿using Plant_Explorer.Contract.Repositories.ModelViews.QuizAttempt;
 using Plant_Explorer.Contract.Repositories.ModelViews.QuizAttemptModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
-using System;
-using System.Threading.Tasks;
 
 namespace Plant_Explorer.Services.Services
 {
