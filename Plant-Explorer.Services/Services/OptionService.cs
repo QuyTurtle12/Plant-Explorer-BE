@@ -111,7 +111,7 @@ public class OptionService : IOptionService
             Guid.TryParse(questionId, out Guid id);
 
             // Filter by question id
-            query = query.Where(o => o.QuestionId.Equals(id.ToString()));
+            query = query.Where(o => o.QuestionId.Equals(id));
         }
 
         // Skip deleted item

@@ -109,7 +109,7 @@ namespace Plant_Explorer.Services.Services
                 Guid.TryParse(quizId, out Guid id);
 
                 // Filter by quiz id
-                query = query.Where(q => q.QuizId.Equals(id.ToString()));
+                query = query.Where(q => q.QuizId.Equals(id));
             }
 
             // Skip deleted item

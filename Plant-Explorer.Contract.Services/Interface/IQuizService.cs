@@ -1,9 +1,7 @@
 ﻿using Plant_Explorer.Contract.Repositories.ModelViews.QuizModel;
-using Plant_Explorer.Contract.Repositories.ModelViews.QuestionModel;
-using Plant_Explorer.Contract.Repositories.ModelViews.OptionModel;
-using Plant_Explorer.Contract.Repositories.ModelViews.QuizAttemptModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
 using Plant_Explorer.Contract.Repositories.ModelViews.Quiz;
+using Plant_Explorer.Contract.Repositories.ModelViews.QuestionModel;
 
 namespace Plant_Explorer.Contract.Services.Interface
 {
@@ -14,5 +12,6 @@ namespace Plant_Explorer.Contract.Services.Interface
         Task CreateQuizAsync(PostQuizModel newQuiz);
         Task UpdateQuizAsync(string id, PutQuizModel updatedQuiz);
         Task DeleteQuizAsync(string id);
+        Task<int> AnswerQuizAsync(string quizId, IList<AnswerQuestionModel> answerList);
     }
 }

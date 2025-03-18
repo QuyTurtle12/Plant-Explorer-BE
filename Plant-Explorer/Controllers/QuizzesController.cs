@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Plant_Explorer.Contract.Repositories.Base;
+using Plant_Explorer.Contract.Repositories.ModelViews.QuestionModel;
 using Plant_Explorer.Contract.Repositories.ModelViews.Quiz;
 using Plant_Explorer.Contract.Repositories.ModelViews.QuizModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
@@ -115,6 +116,24 @@ namespace Plant_Explorer.Controllers
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 message: "Delete a quiz successfully"
+                ));
+        }
+
+        /// <summary>
+        /// Child do quiz
+        /// </summary>
+        /// <param name="quizId">quiz id</param>
+        /// <param name="answerList">List of user's answer</param>
+        /// <returns>Point/Number of Correct Answer</returns>
+        [HttpPost]
+        [Route("answer")]
+        public async Task<IActionResult> AnswerQuiz(string quizId, IList<AnswerQuestionModel> answerList)
+        {
+            int point = await _quizService.AnswerQuizAsync(quizId, answerList);
+            return Ok(new BaseResponseModel<int>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                data: point
                 ));
         }
     }
