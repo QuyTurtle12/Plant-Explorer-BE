@@ -21,12 +21,14 @@ namespace Plant_Explorer.Services.Services
         private readonly string _plantIdApiKey;
         private readonly string _plantIdIdentifyUrl;
         private readonly string _plantIdRetrieveUrl;
+        private readonly IImageService _imageService;
 
         public ScanHistoryService(IMemoryCache memoryCache
             , IHttpClientFactory httpClientFactory
             , IConfiguration configuration
             , IMapper mapper
-            , IUnitOfWork unitOfWork)
+            , IUnitOfWork unitOfWork
+            , IImageService imageService)
         {
             _memoryCache = memoryCache;
             _httpClientFactory = httpClientFactory;
@@ -35,6 +37,7 @@ namespace Plant_Explorer.Services.Services
             _plantIdRetrieveUrl = configuration["PlantId:RetrieveUrl"];
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _imageService = imageService;
         }
 
         public async Task<IEnumerable<ScanHistoryGetModel>> GetAllScanHistoriesAsync()
