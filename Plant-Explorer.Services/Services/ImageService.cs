@@ -18,7 +18,7 @@ namespace Plant_Explorer.Services.Services
             _firestoreDb = firestoreDb;
         }
 
-        public async Task UploadImageAsync(string imagePath)
+        public async Task<string> UploadImageAsync(string imagePath)
         {
             byte[] imageBytes = await File.ReadAllBytesAsync(imagePath);
             string base64Image = Convert.ToBase64String(imageBytes);
@@ -32,6 +32,9 @@ namespace Plant_Explorer.Services.Services
             CollectionReference imagesCollection = _firestoreDb.Collection("images");
             DocumentReference docRef = imagesCollection.Document();
             await docRef.SetAsync(record);
+
+            // Return the generated document ID.
+            return docRef.Id;
         }
 
         public async Task<ImageRecord> GetImageAsync(string documentId)
