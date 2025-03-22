@@ -6,6 +6,7 @@ namespace Plant_Explorer.Core.Utils
     {
         public byte[] ImageBytes { get; set; }  //Cache image into memory using stream
         public string AccessToken { get; set; } //Cache access token to get plant infors
+        public string? ImageDocumentId { get; set; }
     }
     public class PlantIdIdentifyResponse
     {

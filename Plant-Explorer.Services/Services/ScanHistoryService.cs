@@ -21,12 +21,14 @@ namespace Plant_Explorer.Services.Services
         private readonly string _plantIdApiKey;
         private readonly string _plantIdIdentifyUrl;
         private readonly string _plantIdRetrieveUrl;
+        private readonly IImageService _imageService;
 
         public ScanHistoryService(IMemoryCache memoryCache
             , IHttpClientFactory httpClientFactory
             , IConfiguration configuration
             , IMapper mapper
-            , IUnitOfWork unitOfWork)
+            , IUnitOfWork unitOfWork
+            , IImageService imageService)
         {
             _memoryCache = memoryCache;
             _httpClientFactory = httpClientFactory;
@@ -35,6 +37,7 @@ namespace Plant_Explorer.Services.Services
             _plantIdRetrieveUrl = configuration["PlantId:RetrieveUrl"];
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _imageService = imageService;
         }
 
         public async Task<IEnumerable<ScanHistoryGetModel>> GetAllScanHistoriesAsync()
@@ -64,10 +67,23 @@ namespace Plant_Explorer.Services.Services
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("No file uploaded.");
+            // Define the folder path to save the file
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            // Ensure the folder exists
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+            // Generate a unique file name
+            string fileName = $"{Guid.NewGuid()}_{file.FileName}";
+            string filePath = Path.Combine(uploadsFolder, fileName);
+            // Save the file
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
 
-            using MemoryStream memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
-            byte[] imageBytes = memoryStream.ToArray();
+
+            // Convert to base64
+            byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
             string base64Image = Convert.ToBase64String(imageBytes);
 
             using HttpClient httpClient = _httpClientFactory.CreateClient();
@@ -85,7 +101,12 @@ namespace Plant_Explorer.Services.Services
                 throw new InvalidOperationException("Failed to retrieve access token from PlantID.");
 
             string cacheKey = Guid.NewGuid().ToString();
-            _memoryCache.Set(cacheKey, new CachedImage { ImageBytes = imageBytes, AccessToken = result.AccessToken });
+            string documentId = await _imageService.UploadImageAsync(filePath);
+            _memoryCache.Set(cacheKey, new CachedImage { ImageBytes = imageBytes, AccessToken = result.AccessToken, ImageDocumentId = documentId });
+
+            // Delete the file after processing
+            if (File.Exists(filePath))
+                File.Delete(filePath);
 
             return cacheKey;
         }
@@ -104,7 +125,7 @@ namespace Plant_Explorer.Services.Services
             response.EnsureSuccessStatusCode();
             PlantIdResultsResponse? plantResult = JsonSerializer.Deserialize<PlantIdResultsResponse>(await response.Content.ReadAsStringAsync());
 
-            string scientificName = plantResult?.Result?.Classification?.Suggestions?.FirstOrDefault()?.Name;
+            string scientificName = plantResult?.Result?.Classification?.Suggestions?.FirstOrDefault()?.Name!;
             if (string.IsNullOrEmpty(scientificName))
                 throw new KeyNotFoundException("Scientific name not found.");
             
@@ -154,7 +175,7 @@ namespace Plant_Explorer.Services.Services
                 UserId = Guid.Parse("0E2BE45F-B2C9-4F2F-9879-4AAAAA17BE65"),
                 PlantId = existingPlant.Id,
                 Probability = (decimal)plantResult.Result.Classification.Suggestions.FirstOrDefault().Probability,
-                ImgUrl = "Image not implemented yet"
+                ImgUrl = cachedImage.ImageDocumentId
             });
 
             return new (_mapper.Map<PlantGetModel>(existingPlant), scanHistory);

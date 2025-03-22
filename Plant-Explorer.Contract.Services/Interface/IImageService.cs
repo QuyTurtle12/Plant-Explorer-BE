@@ -9,7 +9,7 @@ namespace Plant_Explorer.Contract.Services.Interface
 {
     public interface IImageService
     {
-        Task UploadImageAsync(string imagePath);
+        Task<string> UploadImageAsync(string imagePath);
         Task<ImageRecord> GetImageAsync(string documentId);
     }
 }

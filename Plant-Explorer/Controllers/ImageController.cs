@@ -23,10 +23,11 @@ namespace Plant_Explorer.Controllers
         {
             try
             {
-                await _imageService.UploadImageAsync(imagePath);
-                return Ok(new { message = "Image uploaded successfully." });
+                // Capture the documentId returned by the service.
+                string documentId = await _imageService.UploadImageAsync(imagePath);
+                return Ok(new { message = "Image uploaded successfully.", documentId });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
