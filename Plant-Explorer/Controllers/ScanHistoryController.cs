@@ -11,14 +11,16 @@ namespace Plant_Explorer.Controllers
     public class ScanHistoryController : ControllerBase
     {
         private readonly IScanHistoryService _scanHistoryService;
+        private readonly ITokenService _tokenService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScanHistoryController"/> class.
         /// </summary>
         /// <param name="scanHistoryService">The scan history service.</param>
-        public ScanHistoryController(IScanHistoryService scanHistoryService)
+        public ScanHistoryController(IScanHistoryService scanHistoryService, ITokenService tokenService)
         {
             _scanHistoryService = scanHistoryService;
+            _tokenService = tokenService;
         }
 
         /// <summary>
@@ -54,9 +56,12 @@ namespace Plant_Explorer.Controllers
         [HttpGet("getPlantInfo/{cacheKey}")]
         public async Task<IActionResult> GetPlantInfo(string cacheKey)
         {
+            string? userId = _tokenService.GetCurrentUserId();
+            if (userId == null) return StatusCode(401, "Not authorized");
+
             try
             {
-                var (plant, scanHistory) = await _scanHistoryService.GetPlantInfoAsync(cacheKey);
+                var (plant, scanHistory) = await _scanHistoryService.GetPlantInfoAsync(cacheKey, Guid.Parse(userId));
                 if (plant == null || scanHistory == null)
                     return NotFound("Plant details not found.");
 
