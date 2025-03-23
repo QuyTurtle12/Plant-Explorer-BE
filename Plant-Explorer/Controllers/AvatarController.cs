@@ -44,6 +44,14 @@ namespace Plant_Explorer.Controllers
             return Ok(avatar);
         }
 
+        [HttpPut]
+        [Route("user")]
+        public async Task<IActionResult> UpdateUserAvatar(Guid avatarId)
+        {
+            await _avatarService.UpdateUserAvatarAsync(avatarId);
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

@@ -3,21 +3,18 @@ using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews.AvatarModel;
 using Plant_Explorer.Contract.Services.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plant_Explorer.Services.Services
 {
     public class AvatarService : IAvatarService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
 
-        public AvatarService(IUnitOfWork unitOfWork)
+        public AvatarService(IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
         }
 
         public async Task<AvatarResponse> CreateAvatarAsync(CreateAvatarRequest request)
@@ -95,6 +92,24 @@ namespace Plant_Explorer.Services.Services
                 Name = avatar.Name,
                 ImageUrl = avatar.ImageUrl
             };
+        }
+
+        public async Task UpdateUserAvatarAsync(Guid avatarId)
+        {
+            var repository = _unitOfWork.GetRepository<Avatar>();
+            var avatar = await repository.Entities.FirstOrDefaultAsync(a => a.Id == avatarId);
+            if (avatar == null) throw new Exception("Avatar not found");
+
+            string currentUserId = _tokenService.GetCurrentUserId();
+
+            ApplicationUser? user = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(currentUserId);
+
+            if (user == null) throw new Exception("User not found");
+
+            user.AvatarId = avatarId;
+
+            await _unitOfWork.GetRepository<ApplicationUser>().UpdateAsync(user);
+            await _unitOfWork.SaveAsync();
         }
     }
 

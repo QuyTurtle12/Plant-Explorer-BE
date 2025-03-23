@@ -35,7 +35,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllUserBadges(int index = 1, int pageSize = 10) 
+        public async Task<IActionResult> GetCurrentUserBadges(int index = 1, int pageSize = 10) 
         {
             PaginatedList<GetUserBadgeModel> result = await _userBadgeService.GetUserBadgesAsync(index, pageSize);
             return Ok(new BaseResponseModel<PaginatedList<GetUserBadgeModel>>(
@@ -47,21 +47,16 @@ namespace Plant_Explorer.Controllers
                 ));
         }
 
-        /// <summary>
-        /// Create a user badge
-        /// </summary>
-        /// <param name="newUserBadge"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("badge")]
-        public async Task<IActionResult> CreateUserBadge(PostUserBadgeModel newUserBadge)
-        {
-            await _userBadgeService.CreateUserBadgeAsync(newUserBadge);
-            return Ok(new BaseResponseModel(
-                statusCode: StatusCodes.Status201Created,
-                code: ResponseCodeConstants.SUCCESS,
-                message: "Create a new user badge successfully"
-                ));
-        }
+        //[HttpPost]
+        //[Route("badge")]
+        //public async Task<IActionResult> CreateUserBadge(PostUserBadgeModel newUserBadge)
+        //{
+        //    await _userBadgeService.CreateUserBadgeAsync(newUserBadge);
+        //    return Ok(new BaseResponseModel(
+        //        statusCode: StatusCodes.Status201Created,
+        //        code: ResponseCodeConstants.SUCCESS,
+        //        message: "Create a new user badge successfully"
+        //        ));
+        //}
     }
 }

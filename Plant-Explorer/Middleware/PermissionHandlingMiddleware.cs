@@ -25,106 +25,130 @@ namespace Plant_Explorer.Middleware
             _logger = logger;
             _excludedUris = new()
             {
-                    { "GET", new List<string>() { "/api/scanhistory"
-                    , "/api/plantapplication"
-                    , "/api/plantcharacteristic"
-                    , "/api/applicationcategory"
-                    , "/api/characteristiccategory"
-                    , "/api/Plant"
-                    , "/api/users"
-                    , "/api/roles"
-                    , "/api/badges"
-                    , "/api/userbadges"
-                    , "/api/bugreports"
-                    , "/api/userpoints"
-                    , "/api/favoriteplants"
-                    , "/api/auth/public"
-                    , "/api/auth/authenticated"
-                    , "/api/image/get"
-                    , "/api/quizzes"
-                    , "/api/options"
-                    , "/api/quizattempts"
-                    , "/api/questions" } },
+                    { "GET", new List<string>() { "/api/auth/public"
+                    , "/api/image/get"} },
 
-                    { "POST", new List<string>() { "/api/scanhistory"
-                    , "/api/plantapplication"
-                    , "/api/plantcharacteristic"
-                    , "/api/applicationcategory"
-                    , "/api/characteristiccategory"
-                    , "/api/Plant"
-                    , "/api/users"
-                    , "/api/badges"
-                    , "/api/userbadges"
-                    , "/api/bugreports"
-                    , "/api/userpoints"
-                    , "/api/favoriteplants"
-                    , "/api/auth/login"
+                    { "POST", new List<string>() { "/api/auth/login"
+                    , "/api/auth/google"
                     , "/api/auth/register"
-                    , "/api/image/upload"
-                    , "/api/quizzes"
-                    , "/api/options"
-                    , "/api/quizattempts"
-                    , "/api/questions" } },
+                    , "/api/image/upload" } },
 
-                    { "PUT", new List<string>() { "/api/scanhistory"
-                    , "/api/plantapplication"
-                    , "/api/plantcharacteristic"
-                    , "/api/applicationcategory"
-                    , "/api/characteristiccategory"
-                    , "/api/Plant"
-                    , "/api/users"
-                    , "/api/badges"
-                    , "/api/userpoints"
-                    , "/api/quizzes"
-                    , "/api/options"
-                    , "/api/quizattempts"
-                    , "/api/questions"  } },
+                    { "PUT", new List<string>() { } },
 
-                    { "DELETE", new List<string>() { "/api/scanhistory"
-                    , "/api/plantapplication"
-                    , "/api/plantcharacteristic"
-                    , "/api/applicationcategory"
-                    , "/api/characteristiccategory"
-                    , "/api/Plant"
-                    , "/api/users"
-                    , "/api/badges"
-                    , "/api/favoriteplants"
-                    , "/api/quizzes"
-                    , "/api/options"
-                    , "/api/quizattempts"
-                    , "/api/questions"  } },
-                //    { "PATCH", new List<string>() {  } },
-                //    { "CONTROLLER", new List<string>() { "" } }
+                    { "DELETE", new List<string>() { } },
             };
             _rolePermissions = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase)
             {
                 { "Children", new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
                     {
-                        { "GET", new List<string>() { "/api/auth/children" } },
-                        { "POST", new List<string>() { } },
-                        { "PUT", new List<string>() { } },
+                        { "GET", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/auth/children"
+                        ,   "/api/users/user"
+                        ,   "/api/scanhistory"
+                        ,   "/api/plantapplication"
+                        ,   "/api/plantcharacteristic"
+                        ,   "/api/plant"
+                        ,   "/api/favoriteplants"
+                        ,   "/api/quizzes"
+                        ,   "/api/questions"
+                        ,   "/api/options"
+                        ,   "/api/userpoints"
+                        ,   "/api/userbadges"
+                        ,   "/api/avatar"
+                        } },
+                        { "POST", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/scanhistory"
+                        ,   "/api/favoriteplants"
+                        ,   "/api/quizzes/answer"
+                        ,   "/api/bugreports"
+                        } },
+                        { "PUT", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/users/user"
+                        ,   "/api/scanhistory"
+                        ,   "/api/avatar/user"
+                        } },
                         { "PATCH", new List<string>() { } },
-                        { "DELETE", new List<string>() { } },
+                        { "DELETE", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/scanhistory"
+                        ,   "/api/favoriteplants"
+                        } },
                         { "CONTROLLER", new List<string>() { } }
                     }
                 },
                 { "Staff", new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
                     {
-                        { "GET", new List<string>() { "/api/auth/staff" } },
-                        { "POST", new List<string>() { "/api/auth/staff" } },
-                        { "PUT", new List<string>() { } },
+                        { "GET", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/auth/staff"
+                        ,   "/api/quizzes"
+                        ,   "/api/questions"
+                        ,   "/api/options"
+                        ,   "/api/userpoints"
+                        ,   "/api/badges"
+                        ,   "/api/bugreports"
+                        ,   "/api/plantcharacteristic"
+                        ,   "/api/plantapplication"
+                        ,   "/api/applicationcategory"
+                        ,   "/api/characteristiccategory"
+                        ,   "/api/plant"
+                        ,   "/api/avatar"
+                        } },
+                        { "POST", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/auth/staff"
+                        ,   "/api/quizzes"
+                        ,   "/api/questions"
+                        ,   "/api/options"
+                        ,   "/api/badges"
+                        ,   "/api/bugreports"
+                        ,   "/api/plantcharacteristic"
+                        ,   "/api/plantapplication"
+                        ,   "/api/applicationcategory"
+                        ,   "/api/characteristiccategory"
+                        ,   "/api/plant"
+                        } },
+                        { "PUT", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/quizzes"
+                        ,   "/api/questions"
+                        ,   "/api/options"
+                        ,   "/api/userpoints"
+                        ,   "/api/badges"
+                        ,   "/api/plantcharacteristic"
+                        ,   "/api/plantapplication"
+                        ,   "/api/applicationcategory"
+                        ,   "/api/characteristiccategory"
+                        ,   "/api/plant"
+                        ,   "/api/avatar"
+                        } },
                         { "PATCH", new List<string>() { } },
-                        { "DELETE", new List<string>() { } },
+                        { "DELETE", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/quizzes"
+                        ,   "/api/questions"
+                        ,   "/api/options"
+                        ,   "/api/badges"
+                        ,   "/api/plantcharacteristic"
+                        ,   "/api/plantapplication"
+                        ,   "/api/applicationcategory"
+                        ,   "/api/characteristiccategory"
+                        ,   "/api/plant"
+                        ,   "/api/avatar"
+                        } },
                         { "CONTROLLER", new List<string>() { } }
                     }
                 },
                 { "Admin", new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
                     {
-                        { "GET", new List<string>() { } },
-                        { "POST", new List<string>() { } },
-                        { "PUT", new List<string>() { } },
+                        { "GET", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/roles"
+                        ,   "/api/users"
+                        } },
+                        { "POST", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/users"
+                        } },
+                        { "PUT", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/users"
+                        } },
                         { "PATCH", new List<string>() { } },
-                        { "DELETE", new List<string>() { } },
+                        { "DELETE", new List<string>() { "/api/auth/authenticated"
+                        ,   "/api/users" } },
                         { "CONTROLLER", new List<string>() { } }
                     }
                 }
