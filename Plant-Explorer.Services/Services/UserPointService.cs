@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Plant_Explorer.Contract.Repositories.Entity;
 using Plant_Explorer.Contract.Repositories.Interface;
+using Plant_Explorer.Contract.Repositories.ModelViews.UserBadgeModel;
 using Plant_Explorer.Contract.Repositories.ModelViews.UserPointModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
 using Plant_Explorer.Contract.Services.Interface;
@@ -17,14 +18,16 @@ namespace Plant_Explorer.Services.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
+        private readonly IUserBadgeService _userBadgeService;
 
         private const int INITIAL_POINT = 0;
 
-        public UserPointService(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
+        public UserPointService(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService, IUserBadgeService userBadgeService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
+            _userBadgeService = userBadgeService;
         }
 
         public async Task CreateUserPointAsync(PostUserPointModel newUserPoint)
@@ -221,6 +224,53 @@ namespace Plant_Explorer.Services.Services
 
                 // Update the database
                 await _unitOfWork.GetRepository<UserPoint>().UpdateAsync(existingUserPoint);
+            }
+
+            IList<Badge> badges = await _unitOfWork.GetRepository<Badge>().Entities.ToListAsync();
+            IList<UserBadge> userBadges = await _unitOfWork.GetRepository<UserBadge>().Entities
+                                                                                .Where(ub => ub.UserId.Equals(Guid.Parse(userId)))    
+                                                                                .ToListAsync();
+            // Give badge to user
+            if (!userBadges.Any()) {
+                foreach (Badge badge in badges)
+                {
+                    // If user has enough point, give badge to user
+                    if (existingUserPoint.Point >= badge.conditionalPoint)
+                    {
+                        PostUserBadgeModel postUserBadgeModel = new PostUserBadgeModel
+                        {
+                            UserId = userId,
+                            BadgeId = badge.Id.ToString(),
+                        };
+
+                        await _userBadgeService.CreateUserBadgeAsync(postUserBadgeModel);
+                    }
+                }
+            }
+            else
+            {
+                foreach (Badge badge in badges)
+                {
+                    // Check if user already contain the badges
+                    foreach (UserBadge item in userBadges)
+                    {
+                        if (item.BadgeId.Equals(badge.Id))
+                        {
+                            continue;
+                        }
+                        // If user has enough point, give badge to user
+                        else if (existingUserPoint.Point >= badge.conditionalPoint)
+                        {
+                            PostUserBadgeModel postUserBadgeModel = new PostUserBadgeModel
+                            {
+                                UserId = userId,
+                                BadgeId = badge.Id.ToString(),
+                            };
+
+                            await _userBadgeService.CreateUserBadgeAsync(postUserBadgeModel);
+                        }
+                    }
+                }
             }
 
             await _unitOfWork.SaveAsync();
