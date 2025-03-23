@@ -8,6 +8,7 @@ using Plant_Explorer.Contract.Repositories.Interface;
 using Plant_Explorer.Contract.Repositories.ModelViews;
 using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Core.Utils;
+using System.Text;
 using System.Text.Json;
 
 namespace Plant_Explorer.Services.Services
@@ -21,6 +22,7 @@ namespace Plant_Explorer.Services.Services
         private readonly string _plantIdApiKey;
         private readonly string _plantIdIdentifyUrl;
         private readonly string _plantIdRetrieveUrl;
+        private readonly string _deepSeekAiApi;
         private readonly IImageService _imageService;
 
         public ScanHistoryService(IMemoryCache memoryCache
@@ -35,6 +37,7 @@ namespace Plant_Explorer.Services.Services
             _plantIdApiKey = configuration["PlantId:ApiKey"];
             _plantIdIdentifyUrl = configuration["PlantId:IdentifyUrl"];
             _plantIdRetrieveUrl = configuration["PlantId:RetrieveUrl"];
+            _deepSeekAiApi = configuration["DeepSeek:ApiKey"];
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _imageService = imageService;
@@ -110,7 +113,7 @@ namespace Plant_Explorer.Services.Services
 
             return cacheKey;
         }
-        public async Task<(PlantGetModel, ScanHistoryGetModel)> GetPlantInfoAsync(string cacheKey)
+        public async Task<(PlantGetModel, ScanHistoryGetModel)> GetPlantInfoAsync(string cacheKey, Guid userId)
         {
             if (!_memoryCache.TryGetValue(cacheKey, out CachedImage cachedImage))
                 throw new KeyNotFoundException("Image not found or cache expired");
@@ -149,11 +152,12 @@ namespace Plant_Explorer.Services.Services
                 GbifSpeciesResponse? detailsResult = JsonSerializer.Deserialize<GbifSpeciesResponse>(await httpClient.GetStringAsync(detailsUrl));
                 
 
-                // Fetch description, habitat, distribution from Wikipedia
+                // Fetch description from Wikipedia
                 string wikiUrl = $"https://en.wikipedia.org/api/rest_v1/page/summary/{Uri.EscapeDataString(scientificName)}";
                 WikipediaResponse? wikiResult = JsonSerializer.Deserialize<WikipediaResponse>(await httpClient.GetStringAsync(wikiUrl));
                 string description = wikiResult?.Extract ?? "Description not available";
-                
+                //Fetch habitat, distribution from openAI
+                /*var result = await GeneratePlantInfoAsync(scientificName);*/
 
                 Plant newPlant = new Plant
                 {
@@ -172,9 +176,9 @@ namespace Plant_Explorer.Services.Services
 
             ScanHistoryGetModel? scanHistory = await CreateScanHistoryAsync(new ScanHistoryPostModel
             {
-                UserId = Guid.Parse("0E2BE45F-B2C9-4F2F-9879-4AAAAA17BE65"),
+                UserId = userId,
                 PlantId = existingPlant.Id,
-                Probability = (decimal)plantResult.Result.Classification.Suggestions.FirstOrDefault().Probability,
+                Probability = (decimal) plantResult.Result.Classification.Suggestions.FirstOrDefault().Probability,
                 ImgUrl = cachedImage.ImageDocumentId
             });
 
@@ -185,6 +189,61 @@ namespace Plant_Explorer.Services.Services
             if (!_memoryCache.TryGetValue(cacheKey, out CachedImage cachedImage))
                 throw new KeyNotFoundException("Image not found or cache expired");
             return cachedImage.ImageBytes;
+        }
+
+        //Let open ai to generate distribution and habitat
+        private async Task<(string distribution, string habitat)> GeneratePlantInfoAsync(string plantName)
+        {
+            using HttpClient httpClient = _httpClientFactory.CreateClient();
+
+            string prompt = $"Provide separate information about the distribution and habitat of {plantName}. " +
+                            "First, write 'Distribution:' followed by the description. " +
+                            "Then, write 'Habitat:' followed by the description.";
+
+            var requestBody = new
+            {
+                model = "deepseek-chat",
+                messages = new[]
+                {
+            new { role = "system", content = "You are an expert botanist providing detailed plant information." },
+            new { role = "user", content = prompt }
+        },
+                max_tokens = 300
+            };
+
+            string jsonBody = JsonSerializer.Serialize(requestBody);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://api.deepseek.com/v1/chat/completions")
+            {
+                Headers = { { "Authorization", $"Bearer {_deepSeekAiApi}" } },
+                Content = new StringContent(jsonBody, Encoding.UTF8, "application/json")
+            };
+
+            HttpResponseMessage response = await httpClient.SendAsync(request);
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Status Code: {response.StatusCode}");
+            Console.WriteLine($"Response Body: {responseBody}");
+
+            response.EnsureSuccessStatusCode();
+            using JsonDocument doc = JsonDocument.Parse(responseBody);
+            string generatedText = doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
+
+            // Extract Distribution and Habitat
+            string distribution = ExtractSection(generatedText, "Distribution:");
+            string habitat = ExtractSection(generatedText, "Habitat:");
+
+            return (distribution, habitat);
+        }
+
+        // Helper method to extract section content to separate field
+        private string ExtractSection(string text, string section)
+        {
+            int startIndex = text.IndexOf(section);
+            if (startIndex == -1) return "";
+
+            startIndex += section.Length;
+            int endIndex = text.IndexOf("\n", startIndex);
+            return endIndex == -1 ? text[startIndex..].Trim() : text[startIndex..endIndex].Trim();
         }
     }
 }
