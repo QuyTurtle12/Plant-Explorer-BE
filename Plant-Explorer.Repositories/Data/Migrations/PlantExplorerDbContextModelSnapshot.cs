@@ -157,7 +157,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationCategory");
+                    b.ToTable("ApplicationCategory", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.ApplicationRole", b =>
@@ -328,7 +328,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Avatars");
+                    b.ToTable("Avatars", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Badge", b =>
@@ -375,7 +375,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Badges");
+                    b.ToTable("Badges", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.BugReport", b =>
@@ -418,7 +418,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BugReports");
+                    b.ToTable("BugReports", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.CharacteristicCategory", b =>
@@ -453,7 +453,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CharacteristicCategory");
+                    b.ToTable("CharacteristicCategory", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.FavoritePlant", b =>
@@ -474,7 +474,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FavoritePlant");
+                    b.ToTable("FavoritePlant", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Option", b =>
@@ -521,7 +521,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Options");
+                    b.ToTable("Options", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Plant", b =>
@@ -571,7 +571,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Plants");
+                    b.ToTable("Plants", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.PlantApplication", b =>
@@ -595,7 +595,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("PlantApplication");
+                    b.ToTable("PlantApplication", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.PlantCharacteristic", b =>
@@ -619,7 +619,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("PlantCharacteristic");
+                    b.ToTable("PlantCharacteristic", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Question", b =>
@@ -668,7 +668,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Quiz", b =>
@@ -706,7 +706,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quizzes");
+                    b.ToTable("Quizzes", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.QuizAttempt", b =>
@@ -754,7 +754,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuizAttempts");
+                    b.ToTable("QuizAttempts", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.ScanHistory", b =>
@@ -785,7 +785,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ScanHistories");
+                    b.ToTable("ScanHistories", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.UserBadge", b =>
@@ -809,7 +809,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserBadges");
+                    b.ToTable("UserBadges", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.UserPoint", b =>
@@ -856,7 +856,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserPoint");
+                    b.ToTable("UserPoint", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.PlantImage", b =>
@@ -875,7 +875,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("PlantImage");
+                    b.ToTable("PlantImage", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

@@ -190,6 +190,10 @@ namespace Plant_Explorer.Services.Services
             // Check answer
             foreach (AnswerQuestionModel item in answerList)
             {
+                if (!Guid.TryParse(item.QuestionId, out _) || !Guid.TryParse(item.OptionId, out _))
+                {
+                    throw new ErrorException(StatusCodes.Status400BadRequest, ResponseCodeConstants.INVALID_INPUT, $"Invalid question or option ID: {item.QuestionId}, {item.OptionId}");
+                }
                 // Validate if the question is belong to given quiz
                 Question? question = await _unitOfWork.GetRepository<Question>().Entities
                                                     .Where(q => q.QuizId.Equals(Guid.Parse(quizId)) && q.Id.Equals(Guid.Parse(item.QuestionId)))
