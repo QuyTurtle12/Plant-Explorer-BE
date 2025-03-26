@@ -8,7 +8,7 @@ namespace Plant_Explorer.Controllers
     /// Controller for managing characteristic categories.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/characteristic-category")]
     public class CharacteristicCategoryController : ControllerBase
     {
         private readonly ICharacteristicCategoryService _characteristicCategoryService;

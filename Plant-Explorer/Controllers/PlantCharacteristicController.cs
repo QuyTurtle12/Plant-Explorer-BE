@@ -9,7 +9,7 @@ namespace Plant_Explorer.Controllers
     /// Controller for managing plant characteristics.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/plant-characteristics")]
     public class PlantCharacteristicController : ControllerBase
     {
         private readonly IPlantCharacteristicService _service;
