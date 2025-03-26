@@ -28,7 +28,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="file">The image file containing the plant.</param>
         /// <returns>The identification result.</returns>
-        [HttpPost("identify")]
+        [HttpPost]
+        [Route("/api/scan-histories/identify")]
         public async Task<IActionResult> IdentifyPlant(IFormFile file)
         {
             try
@@ -53,7 +54,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="cacheKey">The cache key.</param>
         /// <returns>The plant information and scan history.</returns>
-        [HttpGet("getPlantInfo/{cacheKey}")]
+        [HttpGet]
+        [Route("/api/scan-histories/plant-info/{cacheKey}")]
         public async Task<IActionResult> GetPlantInfo(string cacheKey)
         {
             string? userId = _tokenService.GetCurrentUserId();
@@ -78,7 +80,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="cacheKey">The cache key.</param>
         /// <returns>The plant image.</returns>
-        [HttpGet("getImage/{cacheKey}")]
+        [HttpGet]
+        [Route("/api/scan-histories/image/{cacheKey}")]
         public async Task<IActionResult> GetPlantImage(string cacheKey)
         {
             try

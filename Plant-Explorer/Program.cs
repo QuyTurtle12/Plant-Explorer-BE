@@ -106,7 +106,7 @@ app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.UseMiddleware<PermissionHandlingMiddleware>();
+app.UseMiddleware<PermissionHandlingMiddleware>();
 app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 
 app.MapControllers();

@@ -55,7 +55,7 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("user")]
+        [Route("current-user")]
         public async Task<IActionResult> GetUserProfile()
         {
             GetUserModel result = await _userService.GetUserProfileAsync();
@@ -110,7 +110,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="updatedUser">new info</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("user")]
+        [Route("{id}")]
         public async Task<IActionResult> UpdateUser(string id, PutUserModel updatedUser)
         {
             await _userService.UpdateUserAsync(id, updatedUser);
@@ -127,7 +127,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">user id</param>
         /// <returns></returns>
         [HttpDelete]
-        [Route("user")]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             await _userService.DeleteUserAsync(id);

@@ -56,7 +56,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">badge id</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("badge")]
+        [Route("{id}")]
         public async Task<IActionResult> GetBadge(string id)
         {
             GetBadgeModel result = await _badgeService.GetBadgeByIdAsync(id);
@@ -76,7 +76,6 @@ namespace Plant_Explorer.Controllers
         /// <param name="newBadge">Type: Gold, Silver, Copper</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("badge")]
         public async Task<IActionResult> CreateBadge(PostBadgeModel newBadge)
         {
             await _badgeService.CreateBadgeAsync(newBadge);
@@ -94,7 +93,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="updatedBage">Type: Gold, Silver, Copper</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("badge")]
+        [Route("{id}")]
         public async Task<IActionResult> UpdateBadge(string id, PutBadgeModel updatedBage)
         {
             await _badgeService.UpdateBadgeAsync(id, updatedBage);
@@ -111,7 +110,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">badge id</param>
         /// <returns></returns>
         [HttpDelete]
-        [Route("badge")]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteBadge(string id)
         {
             await _badgeService.DeleteBadgeAsync(id);

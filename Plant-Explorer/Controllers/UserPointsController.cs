@@ -35,6 +35,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="userIdSearch">User id</param>
         /// <returns></returns>
         [HttpGet]
+        [Route("/api/user-points")]
         public async Task<IActionResult> GetAllUserPoint(int index = 1, int pageSize = 10, string? idSearch = null, string? userIdSearch = null)
         {
             PaginatedList<GetUserPointModel> result = await _userPointService.GetAllUserPointsAsync(index, pageSize, idSearch, userIdSearch);
@@ -52,7 +53,7 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("user")]
+        [Route("/api/user-points/current-point")]
         public async Task<IActionResult> GetCurrentUserPoint()
         {
             GetUserPointModel result = await _userPointService.GetCurrentUserPointdAsync();
@@ -82,21 +83,17 @@ namespace Plant_Explorer.Controllers
         //        ));
         //}
 
-        /// <summary>
-        /// Updated user point
-        /// </summary>
-        /// <param name="updatedUserPoint"></param>
-        /// <returns></returns>
-        [HttpPut]
-        [Route("user")]
-        public async Task<IActionResult> UpdateUserPoint(PutUserPointModel updatedUserPoint)
-        {
-            await _userPointService.UpdateUserPointAsync(updatedUserPoint);
-            return Ok(new BaseResponseModel(
-                statusCode: StatusCodes.Status200OK,
-                code: ResponseCodeConstants.SUCCESS,
-                message: "Update a user point successfully"
-                ));
-        }
+
+        //[HttpPut]
+        //[Route("/api/user-points")]
+        //public async Task<IActionResult> UpdateUserPoint(PutUserPointModel updatedUserPoint)
+        //{
+        //    await _userPointService.UpdateUserPointAsync(updatedUserPoint);
+        //    return Ok(new BaseResponseModel(
+        //        statusCode: StatusCodes.Status200OK,
+        //        code: ResponseCodeConstants.SUCCESS,
+        //        message: "Update a user point successfully"
+        //        ));
+        //}
     }
 }

@@ -15,10 +15,13 @@ namespace Plant_Explorer.Controllers
             _imageService = imageService;
         }
 
-        // Endpoint to upload an image.
-        // For simplicity, we assume a query parameter or a file path is provided.
-        // In a real-world app, you'd use IFormFile from a multipart/form-data request.
-        [HttpPost("upload")]
+        /// <summary>
+        /// Endpoint to upload an image.
+        /// </summary>
+        /// <param name="imagePath"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("/api/images")]
         public async Task<IActionResult> Upload([FromQuery] string imagePath)
         {
             try
@@ -33,8 +36,13 @@ namespace Plant_Explorer.Controllers
             }
         }
 
-        // Endpoint to retrieve an image by its document ID.
-        [HttpGet("get/{documentId}")]
+        /// <summary>
+        /// Endpoint to retrieve an base-64 image by its document ID.
+        /// </summary>
+        /// <param name="documentId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/api/images/{documentId}")]
         public async Task<IActionResult> Get(string documentId)
         {
             try
@@ -48,7 +56,14 @@ namespace Plant_Explorer.Controllers
             }
 
         }
-        [HttpGet("display/{documentId}")]
+
+        /// <summary>
+        /// Display image
+        /// </summary>
+        /// <param name="documentId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/api/images/display/{documentId}")]
         public async Task<IActionResult> Display(string documentId)
         {
             try

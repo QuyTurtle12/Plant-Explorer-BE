@@ -26,35 +26,49 @@ namespace Plant_Explorer.Controllers
             _quizAttemptService = quizAttemptService;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetAllQuizAttempts(int index = 1, int pageSize = 10, string? userId = null, string? quizId = null)
-        //{
-        //    PaginatedList<GetQuizAttemptModel> result = await _quizAttemptService.GetAllQuizAttemptsAsync(index, pageSize, userId, quizId);
-        //    return Ok(new BaseResponseModel<PaginatedList<GetQuizAttemptModel>>(
-        //        statusCode: StatusCodes.Status200OK,
-        //        code: ResponseCodeConstants.SUCCESS,
-        //        data: result,
-        //        additionalData: null,
-        //        message: "Finished"
-        //    ));
-        //}
+        /// <summary>
+        /// Get all quiz attempts of all children
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="userId"></param>
+        /// <param name="quizId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/api/quiz-attempts")]
+        public async Task<IActionResult> GetAllQuizAttempts(int index = 1, int pageSize = 10, string? userId = null, string? quizId = null)
+        {
+            PaginatedList<GetQuizAttemptModel> result = await _quizAttemptService.GetAllQuizAttemptsAsync(index, pageSize, userId, quizId);
+            return Ok(new BaseResponseModel<PaginatedList<GetQuizAttemptModel>>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                data: result,
+                additionalData: null,
+                message: "Finished"
+            ));
+        }
 
-        //[HttpGet]
-        //[Route("quizattempt")]
-        //public async Task<IActionResult> GetQuizAttempt(string id)
-        //{
-        //    GetQuizAttemptModel result = await _quizAttemptService.GetQuizAttemptByIdAsync(id);
-        //    return Ok(new BaseResponseModel<GetQuizAttemptModel>(
-        //        statusCode: StatusCodes.Status200OK,
-        //        code: ResponseCodeConstants.SUCCESS,
-        //        data: result,
-        //        additionalData: null,
-        //        message: "Finished"
-        //    ));
-        //}
+        /// <summary>
+        /// Get a quiz attempt by id
+        /// </summary>
+        /// <param name="id">quiz attempt id</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/api/quiz-attempts/{id}")]
+        public async Task<IActionResult> GetQuizAttempt(string id)
+        {
+            GetQuizAttemptModel result = await _quizAttemptService.GetQuizAttemptByIdAsync(id);
+            return Ok(new BaseResponseModel<GetQuizAttemptModel>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                data: result,
+                additionalData: null,
+                message: "Finished"
+            ));
+        }
 
         //[HttpPost]
-        //[Route("quizattempt")]
+        //[Route("/api/quiz-attempts")]
         //public async Task<IActionResult> CreateQuizAttempt(PostQuizAttemptModel newQuizAttempt)
         //{
         //    await _quizAttemptService.CreateQuizAttemptAsync(newQuizAttempt);

@@ -9,15 +9,15 @@ namespace Plant_Explorer.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class PlantController : ControllerBase
+    public class PlantsController : ControllerBase
     {
         private readonly IPlantService _plantService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlantController"/> class.
+        /// Initializes a new instance of the <see cref="PlantsController"/> class.
         /// </summary>
         /// <param name="plantService">The plant service.</param>
-        public PlantController(IPlantService plantService)
+        public PlantsController(IPlantService plantService)
         {
             _plantService = plantService;
         }
@@ -93,7 +93,7 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="searchString"></param>
         /// <returns></returns>
-        [HttpGet("/searchByName")]
+        [HttpGet("/search/{searchString}")]
         public async Task<IActionResult> SearchPlantByName(string? searchString)
         {
             if (string.IsNullOrWhiteSpace(searchString))

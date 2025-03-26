@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Plant_Explorer.Contract.Repositories.Base;
-using Plant_Explorer.Contract.Repositories.ModelViews.BadgeModel;
 using Plant_Explorer.Contract.Repositories.ModelViews.BugReportModel;
-using Plant_Explorer.Contract.Repositories.ModelViews.RoleModel;
 using Plant_Explorer.Contract.Repositories.PaggingItems;
 using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Core.Constants;
-using Plant_Explorer.Services.Services;
 
 namespace Plant_Explorer.Controllers
 {
@@ -39,6 +35,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="userIdSearch">reported user id</param>
         /// <returns></returns>
         [HttpGet]
+        [Route("/api/bug-reports")]
         public async Task<IActionResult> GetAllBugReports(int index = 1, int pageSize = 10, string? idSearch = null, string? nameSearch = null, string? userIdSearch = null)
         {
             PaginatedList<GetBugReportModel> result = await _bugReportService.GetAllUserReportsAsync(index, pageSize, idSearch, nameSearch, userIdSearch);
@@ -57,7 +54,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="newBugReport"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("report")]
+        [Route("/api/bug-reports")]
         public async Task<IActionResult> CreateUserReport(PostBugReportModel newBugReport)
         {
             await _bugReportService.CreateUserReportAsync(newBugReport);

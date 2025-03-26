@@ -55,7 +55,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">Question id</param>
         /// <returns>Question details</returns>
         [HttpGet]
-        [Route("question")]
+        [Route("{id}")]
         public async Task<IActionResult> GetQuestion(string id)
         {
             GetQuestionModel result = await _questionService.GetQuestionByIdAsync(id);
@@ -74,7 +74,6 @@ namespace Plant_Explorer.Controllers
         /// <param name="newQuestion">Question details</param>
         /// <returns>Creation result</returns>
         [HttpPost]
-        [Route("question")]
         public async Task<IActionResult> CreateQuestion(PostQuestionModel newQuestion)
         {
             await _questionService.CreateQuestionAsync(newQuestion);
@@ -92,7 +91,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="updatedQuestion">Updated question details</param>
         /// <returns>Update result</returns>
         [HttpPut]
-        [Route("question")]
+        [Route("{id}")]
         public async Task<IActionResult> UpdateQuestion(string id, PutQuestionModel updatedQuestion)
         {
             await _questionService.UpdateQuestionAsync(id, updatedQuestion);
@@ -109,7 +108,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">Question id</param>
         /// <returns>Deletion result</returns>
         [HttpDelete]
-        [Route("question")]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteQuestion(string id)
         {
             await _questionService.DeleteQuestionAsync(id);

@@ -54,7 +54,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">Quiz id</param>
         /// <returns>Quiz details</returns>
         [HttpGet]
-        [Route("quiz")]
+        [Route("{id}")]
         public async Task<IActionResult> GetQuiz(string id)
         {
             GetQuizModel result = await _quizService.GetQuizByIdAsync(id);
@@ -73,7 +73,6 @@ namespace Plant_Explorer.Controllers
         /// <param name="newQuiz">Quiz details</param>
         /// <returns>Creation result</returns>
         [HttpPost]
-        [Route("quiz")]
         public async Task<IActionResult> CreateQuiz(PostQuizModel newQuiz)
         {
             await _quizService.CreateQuizAsync(newQuiz);
@@ -91,7 +90,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="updatedQuiz">Updated quiz details</param>
         /// <returns>Update result</returns>
         [HttpPut]
-        [Route("quiz")]
+        [Route("{id}")]
         public async Task<IActionResult> UpdateQuiz(string id, PutQuizModel updatedQuiz)
         {
             await _quizService.UpdateQuizAsync(id, updatedQuiz);
@@ -108,7 +107,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">Quiz id</param>
         /// <returns>Deletion result</returns>
         [HttpDelete]
-        [Route("quiz")]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteQuiz(string id)
         {
             await _quizService.DeleteQuizAsync(id);
@@ -122,14 +121,14 @@ namespace Plant_Explorer.Controllers
         /// <summary>
         /// Child do quiz
         /// </summary>
-        /// <param name="quizId">quiz id</param>
+        /// <param name="id">quiz id</param>
         /// <param name="answerList">List of user's answer</param>
         /// <returns>Point/Number of Correct Answer</returns>
         [HttpPost]
-        [Route("answer")]
-        public async Task<IActionResult> AnswerQuiz(string quizId, IList<AnswerQuestionModel> answerList)
+        [Route("answer/{id}")]
+        public async Task<IActionResult> AnswerQuiz(string id, IList<AnswerQuestionModel> answerList)
         {
-            int point = await _quizService.AnswerQuizAsync(quizId, answerList);
+            int point = await _quizService.AnswerQuizAsync(id, answerList);
             return Ok(new BaseResponseModel<int>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,

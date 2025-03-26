@@ -27,6 +27,7 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <returns>A list of characteristic categories.</returns>
         [HttpGet]
+        [Route("/api/characteristic-category")]
         public async Task<IActionResult> GetAll()
         {
             var categories = await _characteristicCategoryService.GetAllCategoriesAsync();
@@ -38,7 +39,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="id">The identifier of the characteristic category.</param>
         /// <returns>The characteristic category.</returns>
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("/api/characteristic-category/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var category = await _characteristicCategoryService.GetCategoryByIdAsync(id);
@@ -52,6 +54,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="model">The characteristic category model.</param>
         /// <returns>The created characteristic category.</returns>
         [HttpPost]
+        [Route("/api/characteristic-category")]
         public async Task<IActionResult> Create([FromBody] CharacteristicCategoryPostModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -65,7 +68,8 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">The identifier of the characteristic category.</param>
         /// <param name="model">The characteristic category model.</param>
         /// <returns>The updated characteristic category.</returns>
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("/api/characteristic-category/{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] CharacteristicCategoryPutModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -79,7 +83,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="id">The identifier of the characteristic category.</param>
         /// <returns>No content if the deletion was successful.</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("/api/characteristic-category/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var deleted = await _characteristicCategoryService.SoftDeleteCharacteristicCategoryAsync(id);

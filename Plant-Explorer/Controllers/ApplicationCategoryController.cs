@@ -28,6 +28,7 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <returns>A list of application categories.</returns>
         [HttpGet]
+        [Route("/api/application-category")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _service.GetAllCategoriesAsync());
@@ -38,7 +39,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="id">The ID of the category.</param>
         /// <returns>The application category.</returns>
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("/api/application-category/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var category = await _service.GetCategoryByIdAsync(id);
@@ -51,6 +53,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="model">The category model.</param>
         /// <returns>The created category.</returns>
         [HttpPost]
+        [Route("/api/application-category")]
         public async Task<IActionResult> Create(ApplicationCategoryPostModel model)
         {
             var createdCategory = await _service.CreateCategoryAsync(model);
@@ -63,7 +66,8 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">The ID of the category.</param>
         /// <param name="model">The updated category model.</param>
         /// <returns>The updated category.</returns>
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("/api/application-category/{id}")]
         public async Task<IActionResult> Update(Guid id, ApplicationCategoryPutModel model)
         {
             var updatedCategory = await _service.UpdateCategoryAsync(id, model);
@@ -75,7 +79,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="id">The ID of the category.</param>
         /// <returns>No content if successful, otherwise not found.</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("/api/application-category/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             return await _service.SoftDeleteApplicationCategoryAsync(id) ? Ok("Delete success") : BadRequest("Delete failed");

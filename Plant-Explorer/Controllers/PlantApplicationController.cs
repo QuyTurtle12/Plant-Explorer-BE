@@ -28,6 +28,7 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <returns>A list of plant applications.</returns>
         [HttpGet]
+        [Route("/api/plant-applications")]
         public async Task<ActionResult<IEnumerable<PlantApplicationGetModel>>> GetAll()
         {
             return Ok(await _plantApplicationService.GetAllAsync());
@@ -38,7 +39,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="id">The ID of the plant application.</param>
         /// <returns>The plant application with the specified ID.</returns>
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("/api/plant-applications/{id}")]
         public async Task<ActionResult<PlantApplicationGetModel>> GetById(Guid id)
         {
             var result = await _plantApplicationService.GetByIdAsync(id);
@@ -52,6 +54,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="model">The plant application model.</param>
         /// <returns>The created plant application.</returns>
         [HttpPost]
+        [Route("/api/plant-applications")]
         public async Task<ActionResult<PlantApplicationGetModel>> Create(PlantApplicationPostModel model)
         {
             var result = await _plantApplicationService.CreateAsync(model);
@@ -64,7 +67,8 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">The ID of the plant application to update.</param>
         /// <param name="model">The updated plant application model.</param>
         /// <returns>The updated plant application.</returns>
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("/api/plant-applications/{id}")]
         public async Task<ActionResult<PlantApplicationGetModel>> Update(Guid id, PlantApplicationPutModel model)
         {
             var result = await _plantApplicationService.UpdateAsync(id, model);
@@ -77,7 +81,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="id">The ID of the plant application to delete.</param>
         /// <returns>No content if the deletion was successful.</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("/api/plant-applications/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _plantApplicationService.DeleteAsync(id);

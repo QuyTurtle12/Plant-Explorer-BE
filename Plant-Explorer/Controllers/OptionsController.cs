@@ -52,7 +52,7 @@ public class OptionsController : ControllerBase
     /// <param name="id">Option id</param>
     /// <returns>Option details</returns>
     [HttpGet]
-    [Route("option")]
+    [Route("{id}")]
     public async Task<IActionResult> GetOption(string id)
     {
         GetOptionModel result = await _optionService.GetOptionByIdAsync(id);
@@ -71,7 +71,6 @@ public class OptionsController : ControllerBase
     /// <param name="newOption">Option details</param>
     /// <returns>Creation result</returns>
     [HttpPost]
-    [Route("option")]
     public async Task<IActionResult> CreateOption(PostOptionModel newOption)
     {
         await _optionService.CreateOptionAsync(newOption);
@@ -89,7 +88,7 @@ public class OptionsController : ControllerBase
     /// <param name="updatedOption">Updated option details</param>
     /// <returns>Update result</returns>
     [HttpPut]
-    [Route("option")]
+    [Route("{id}")]
     public async Task<IActionResult> UpdateOption(string id, PutOptionModel updatedOption)
     {
         await _optionService.UpdateOptionAsync(id, updatedOption);
@@ -106,7 +105,7 @@ public class OptionsController : ControllerBase
     /// <param name="id">Option id</param>
     /// <returns>Deletion result</returns>
     [HttpDelete]
-    [Route("option")]
+    [Route("{id}")]
     public async Task<IActionResult> DeleteOption(string id)
     {
         await _optionService.DeleteOptionAsync(id);
@@ -124,10 +123,10 @@ public class OptionsController : ControllerBase
     /// <param name="questionId">Question ID</param>
     /// <returns>True if the option is correct, false otherwise</returns>
     [HttpGet]
-    [Route("check-correct")]
-    public async Task<IActionResult> CheckCorrectOption(string optionId)
+    [Route("check-correct/{id}")]
+    public async Task<IActionResult> CheckCorrectOption(string id)
     {
-        bool isCorrect = await _optionService.IsCorrectOptionAsync(optionId);
+        bool isCorrect = await _optionService.IsCorrectOptionAsync(id);
         return Ok(new BaseResponseModel<bool>(
             statusCode: StatusCodes.Status200OK,
             code: ResponseCodeConstants.SUCCESS,

@@ -17,13 +17,15 @@ namespace Plant_Explorer.Controllers
         }
 
         [HttpGet]
+        [Route("/api/plant-images")]
         public async Task<IActionResult> GetAll()
         {
             var images = await _plantImageService.GetAllPlantImagesAsync();
             return Ok(images);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("/api/plant-images/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var image = await _plantImageService.GetPlantImageByIdAsync(id);
@@ -31,6 +33,7 @@ namespace Plant_Explorer.Controllers
         }
 
         [HttpPost]
+        [Route("/api/plant-images")]
         public async Task<IActionResult> Create([FromBody] CreatePlantImageRequest request)
         {
             var image = await _plantImageService.CreatePlantImageAsync(request);
@@ -38,13 +41,15 @@ namespace Plant_Explorer.Controllers
         }
 
         [HttpPut]
+        [Route("/api/plant-images")]
         public async Task<IActionResult> Update([FromBody] UpdatePlantImageRequest request)
         {
             var image = await _plantImageService.UpdatePlantImageAsync(request);
             return Ok(image);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("/api/plant-images/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _plantImageService.DeletePlantImageAsync(id);

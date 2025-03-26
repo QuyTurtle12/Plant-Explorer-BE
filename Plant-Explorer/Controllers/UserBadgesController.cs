@@ -35,6 +35,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
+        [Route("/api/user-badges")]
         public async Task<IActionResult> GetCurrentUserBadges(int index = 1, int pageSize = 10) 
         {
             PaginatedList<GetUserBadgeModel> result = await _userBadgeService.GetUserBadgesAsync(index, pageSize);

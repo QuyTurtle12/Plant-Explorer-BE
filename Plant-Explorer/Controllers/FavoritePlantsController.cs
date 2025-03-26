@@ -30,12 +30,13 @@ namespace Plant_Explorer.Controllers
         }
 
         /// <summary>
-        /// Get all favorite plants of a user
+        /// Get all favorite plants of logged in user
         /// </summary>
         /// <param name="index"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
+        [Route("/api/favorite-plant")]
         public async Task<IActionResult> GetAllUserFavoritePlants( int index = 1, int pageSize = 10)
         {
             PaginatedList<GetFavoritePlantModel> result = await _favoritePlantsService.GetUserFavoritePlantsAsync(index, pageSize);
@@ -54,7 +55,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="newUserFavoritePlant"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("plant")]
+        [Route("/api/favorite-plant")]
         public async Task<IActionResult> CreateUserFavoritePlant(PostFavoritePlantModel newUserFavoritePlant)
         {
             await _favoritePlantsService.CreateUserFavoritePlantAsync(newUserFavoritePlant);
@@ -71,6 +72,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">FavoritePlant id</param>
         /// <returns></returns>
         [HttpDelete]
+        [Route("/api/favorite-plant/{id}")]
         public async Task<IActionResult> DeleteUserFavoritePlant([Required] string id)
         {
             await _favoritePlantsService.DeleteUserFavoritePlantAsync(id);

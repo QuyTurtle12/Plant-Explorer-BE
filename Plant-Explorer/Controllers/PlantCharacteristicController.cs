@@ -28,6 +28,7 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <returns>A list of plant characteristics.</returns>
         [HttpGet]
+        [Route("/api/plant-characteristics")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _service.GetAllCharacteristicsAsync();
@@ -39,7 +40,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="id">The ID of the plant characteristic.</param>
         /// <returns>The plant characteristic with the specified ID.</returns>
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("/api/plant-characteristics/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _service.GetCharacteristicByIdAsync(id);
@@ -52,6 +54,7 @@ namespace Plant_Explorer.Controllers
         /// <param name="model">The plant characteristic model.</param>
         /// <returns>The created plant characteristic.</returns>
         [HttpPost]
+        [Route("/api/plant-characteristics")]
         public async Task<IActionResult> Create([FromBody] PlantCharacteristicPostModel model)
         {
             if (!ModelState.IsValid)
@@ -67,7 +70,8 @@ namespace Plant_Explorer.Controllers
         /// <param name="id">The ID of the plant characteristic to update.</param>
         /// <param name="model">The updated plant characteristic model.</param>
         /// <returns>The updated plant characteristic.</returns>
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("/api/plant-characteristics/{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] PlantCharacteristicPutModel model)
         {
             if (!ModelState.IsValid)
@@ -82,7 +86,8 @@ namespace Plant_Explorer.Controllers
         /// </summary>
         /// <param name="id">The ID of the plant characteristic to delete.</param>
         /// <returns>No content if the deletion was successful, otherwise not found.</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("/api/plant-characteristics/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _service.DeleteCharacteristicAsync(id);
