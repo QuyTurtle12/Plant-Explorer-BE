@@ -125,6 +125,41 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.ApplicationCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("CreatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DeletedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationCategory", (string)null);
+                });
+
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -266,7 +301,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DeletedBy")
@@ -282,16 +317,18 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Avatars");
+                    b.ToTable("Avatars", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Badge", b =>
@@ -303,7 +340,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DeletedBy")
@@ -318,19 +355,27 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("conditionalPoint")
+                        .HasColumnType("int");
+
+                    b.Property<string>("imageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Badges");
+                    b.ToTable("Badges", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.BugReport", b =>
@@ -345,7 +390,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DeletedBy")
@@ -357,12 +402,14 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -371,7 +418,63 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BugReports");
+                    b.ToTable("BugReports", (string)null);
+                });
+
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.CharacteristicCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("CreatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DeletedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CharacteristicCategory", (string)null);
+                });
+
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.FavoritePlant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlantId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavoritePlant", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Option", b =>
@@ -381,12 +484,13 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Context")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DeletedBy")
@@ -401,21 +505,23 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("QuestionId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Options");
+                    b.ToTable("Options", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Plant", b =>
@@ -427,7 +533,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DeletedBy")
@@ -439,25 +545,81 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("Distribution")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Family")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Habitat")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ScientificName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Plants");
+                    b.ToTable("Plants", (string)null);
+                });
+
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.PlantApplication", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ApplicationCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PlantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationCategoryId");
+
+                    b.HasIndex("PlantId");
+
+                    b.ToTable("PlantApplication", (string)null);
+                });
+
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.PlantCharacteristic", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CharacteristicCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PlantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CharacteristicCategoryId");
+
+                    b.HasIndex("PlantId");
+
+                    b.ToTable("PlantCharacteristic", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Question", b =>
@@ -472,7 +634,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DeletedBy")
@@ -481,14 +643,16 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Point")
@@ -497,11 +661,14 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<Guid>("QuizId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Quiz", b =>
@@ -513,7 +680,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DeletedBy")
@@ -522,19 +689,24 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quizzes");
+                    b.ToTable("Quizzes", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.QuizAttempt", b =>
@@ -546,10 +718,34 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<DateTime>("AttemptTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("QuizId")
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("CreatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DeletedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("QuizId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -558,7 +754,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuizAttempts");
+                    b.ToTable("QuizAttempts", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.ScanHistory", b =>
@@ -567,8 +763,15 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ImgUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("PlantId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Probability")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("ScanTime")
                         .HasColumnType("datetime2");
@@ -582,7 +785,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ScanHistories");
+                    b.ToTable("ScanHistories", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.UserBadge", b =>
@@ -606,7 +809,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserBadges");
+                    b.ToTable("UserBadges", (string)null);
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.UserPoint", b =>
@@ -618,7 +821,7 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DeletedBy")
@@ -630,17 +833,19 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                    b.Property<DateTimeOffset?>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Point")
                         .HasColumnType("int");
 
                     b.Property<int?>("Rank")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Status")
                         .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
@@ -651,7 +856,26 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserPoint");
+                    b.ToTable("UserPoint", (string)null);
+                });
+
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.PlantImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PlantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlantId");
+
+                    b.ToTable("PlantImage", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -734,6 +958,25 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.FavoritePlant", b =>
+                {
+                    b.HasOne("Plant_Explorer.Contract.Repositories.Entity.Plant", "Plant")
+                        .WithMany("FavoritePlants")
+                        .HasForeignKey("PlantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Plant_Explorer.Contract.Repositories.Entity.ApplicationUser", "User")
+                        .WithMany("FavoritePlants")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Plant");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Option", b =>
                 {
                     b.HasOne("Plant_Explorer.Contract.Repositories.Entity.Question", "Question")
@@ -743,6 +986,44 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.PlantApplication", b =>
+                {
+                    b.HasOne("Plant_Explorer.Contract.Repositories.Entity.ApplicationCategory", "ApplicationCategory")
+                        .WithMany("PlantApplications")
+                        .HasForeignKey("ApplicationCategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Plant_Explorer.Contract.Repositories.Entity.Plant", "Plant")
+                        .WithMany("PlantApplications")
+                        .HasForeignKey("PlantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationCategory");
+
+                    b.Navigation("Plant");
+                });
+
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.PlantCharacteristic", b =>
+                {
+                    b.HasOne("Plant_Explorer.Contract.Repositories.Entity.CharacteristicCategory", "CharacteristicCategory")
+                        .WithMany("PlantCharacteristics")
+                        .HasForeignKey("CharacteristicCategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Plant_Explorer.Contract.Repositories.Entity.Plant", "Plant")
+                        .WithMany("PlantCharacteristics")
+                        .HasForeignKey("PlantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("CharacteristicCategory");
+
+                    b.Navigation("Plant");
                 });
 
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Question", b =>
@@ -761,14 +1042,12 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.HasOne("Plant_Explorer.Contract.Repositories.Entity.Quiz", "Quiz")
                         .WithMany("QuizAttempts")
                         .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Plant_Explorer.Contract.Repositories.Entity.ApplicationUser", "User")
                         .WithMany("QuizAttempts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Quiz");
 
@@ -824,6 +1103,22 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.PlantImage", b =>
+                {
+                    b.HasOne("Plant_Explorer.Contract.Repositories.Entity.Plant", "Plant")
+                        .WithMany("PlantImages")
+                        .HasForeignKey("PlantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Plant");
+                });
+
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.ApplicationCategory", b =>
+                {
+                    b.Navigation("PlantApplications");
+                });
+
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.ApplicationRole", b =>
                 {
                     b.Navigation("Users");
@@ -832,6 +1127,8 @@ namespace Plant_Explorer.Repositories.Data.Migrations
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.ApplicationUser", b =>
                 {
                     b.Navigation("BugReports");
+
+                    b.Navigation("FavoritePlants");
 
                     b.Navigation("QuizAttempts");
 
@@ -852,8 +1149,21 @@ namespace Plant_Explorer.Repositories.Data.Migrations
                     b.Navigation("UserBadges");
                 });
 
+            modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.CharacteristicCategory", b =>
+                {
+                    b.Navigation("PlantCharacteristics");
+                });
+
             modelBuilder.Entity("Plant_Explorer.Contract.Repositories.Entity.Plant", b =>
                 {
+                    b.Navigation("FavoritePlants");
+
+                    b.Navigation("PlantApplications");
+
+                    b.Navigation("PlantCharacteristics");
+
+                    b.Navigation("PlantImages");
+
                     b.Navigation("ScanHistories");
                 });
 

@@ -27,3 +27,4 @@ publish/
 
 # Optional: Ignore appsettings files (if they contain sensitive data)
 **/appsettings*.json
+Plant-Explorer/plant-explorer-95afb-firebase-adminsdk-fbsvc-f5232f5fc8.json

@@ -1,8 +1,11 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Plant_Explorer.Contract.Repositories.Interface;
+using Plant_Explorer.Contract.Services.Interface;
 using Plant_Explorer.Repositories.Repositories;
+using Plant_Explorer.Services.Services;
 
 namespace Plant_Explorer.Services
 {
@@ -14,6 +17,7 @@ namespace Plant_Explorer.Services
             services.AddRepository();
             services.AddAutoMapper();
             services.AddServices(configuration);
+
         }
 
         public static void AddRepository(this IServiceCollection services)
@@ -31,9 +35,23 @@ namespace Plant_Explorer.Services
 
         public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddScoped<ITokenService, TokenService>();
-            //services.AddScoped<IAuthService, AuthService>();
-            
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IBadgeService, BadgeService>();
+            services.AddScoped<IUserBadgeService, UserBadgeService>();
+            services.AddScoped<IBugReportService, BugReportService>();
+            services.AddScoped<IUserPointService, UserPointService>();
+            services.AddScoped<IFavoritePlantService, FavoritePlantService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
+            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IAvatarService, AvatarService>();
+            services.AddScoped<IPlantImageService, PlantImageService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IQuizService, QuizService>();
+            services.AddScoped<IQuizAttemptService, QuizAttemptService>();
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IOptionService, OptionService>();
 
         }
     }

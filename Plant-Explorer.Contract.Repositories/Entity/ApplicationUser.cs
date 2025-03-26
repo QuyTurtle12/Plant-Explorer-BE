@@ -22,6 +22,7 @@ namespace Plant_Explorer.Contract.Repositories.Entity
         public virtual UserPoint? UserPoint { get; set; }
         public virtual ICollection<UserBadge>? UserBadges { get; set; }
         public virtual ICollection<QuizAttempt>? QuizAttempts { get; set; }
+        public virtual ICollection<FavoritePlant>? FavoritePlants { get; set; }
 
         public ApplicationUser() 
         {

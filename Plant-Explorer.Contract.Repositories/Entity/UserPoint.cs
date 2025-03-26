@@ -10,6 +10,7 @@ namespace Plant_Explorer.Contract.Repositories.Entity
 
         // Navigation Properties
         public virtual ApplicationUser? User { get; set; }
+
         public UserPoint() {
             Point = 0;
         }

@@ -14,5 +14,15 @@ namespace Plant_Explorer.Core.Utils
                 return Convert.ToBase64String(secondHash);
             }
         }
+
+        public static string HashPasswordBcrypt(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        public static bool VerifyPasswordBcrypt(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
     }
 }
