@@ -102,7 +102,7 @@ namespace Plant_Explorer.Services.Services
 
             string currentUserId = _tokenService.GetCurrentUserId();
 
-            ApplicationUser? user = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(currentUserId);
+            ApplicationUser? user = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(Guid.Parse(currentUserId));
 
             if (user == null) throw new Exception("User not found");
 

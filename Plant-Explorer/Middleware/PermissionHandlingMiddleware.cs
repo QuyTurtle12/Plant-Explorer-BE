@@ -26,16 +26,25 @@ namespace Plant_Explorer.Middleware
             _excludedUris = new()
             {
                     { "GET", new List<string>() { "/api/auth/public"
-                    , "/api/images"} },
+                    , "/api/images"
+                    , "/api/questions"
+                    , "/api/options"
+                    } },
 
                     { "POST", new List<string>() { "/api/auth/login"
                     , "/api/auth/google"
                     , "/api/auth/register"
-                    , "/api/images" } },
+                    , "/api/images"
+                    , "/api/questions"
+                    , "/api/options"
+                    } },
 
-                    { "PUT", new List<string>() { } },
+                    { "PUT", new List<string>() {"/api/questions"
+                    , "/api/options"
+                    } },
 
-                    { "DELETE", new List<string>() { } },
+                    { "DELETE", new List<string>() {"/api/questions"
+                    , "/api/options" } },
             };
             _rolePermissions = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase)
             {
@@ -50,8 +59,6 @@ namespace Plant_Explorer.Middleware
                         ,   "/api/plants"
                         ,   "/api/favorite-plant"
                         ,   "/api/quizzes"
-                        ,   "/api/questions"
-                        ,   "/api/options"
                         ,   "/api/user-points/current-point"
                         ,   "/api/user-badges"
                         ,   "/api/avatars"
@@ -82,14 +89,12 @@ namespace Plant_Explorer.Middleware
                         ,   "/api/auth/staff"
                         ,   "/api/users/current-user"
                         ,   "/api/quizzes"
-                        ,   "/api/questions"
-                        ,   "/api/options"
                         ,   "/api/user-points"
                         ,   "/api/badges"
                         ,   "/api/bug-reports"
                         ,   "/api/plant-characteristics"
                         ,   "/api/plant-applications"
-                        ,   "/api/applications-category"
+                        ,   "/api/application-category"
                         ,   "/api/characteristic-category"
                         ,   "/api/plants"
                         ,   "/api/plant-images"
@@ -99,8 +104,6 @@ namespace Plant_Explorer.Middleware
                         { "POST", new List<string>() { "/api/auth/authenticated"
                         ,   "/api/auth/staff"
                         ,   "/api/quizzes"
-                        ,   "/api/questions"
-                        ,   "/api/options"
                         ,   "/api/badges"
                         ,   "/api/bug-reports"
                         ,   "/api/plant-characteristics"
@@ -113,8 +116,6 @@ namespace Plant_Explorer.Middleware
                         } },
                         { "PUT", new List<string>() { "/api/auth/authenticated"
                         ,   "/api/quizzes"
-                        ,   "/api/questions"
-                        ,   "/api/options"
                         ,   "/api/badges"
                         ,   "/api/plant-characteristics"
                         ,   "/api/plant-applications"
@@ -127,8 +128,6 @@ namespace Plant_Explorer.Middleware
                         { "PATCH", new List<string>() { } },
                         { "DELETE", new List<string>() { "/api/auth/authenticated"
                         ,   "/api/quizzes"
-                        ,   "/api/questions"
-                        ,   "/api/options"
                         ,   "/api/badges"
                         ,   "/api/plant-characteristics"
                         ,   "/api/plant-applications"
