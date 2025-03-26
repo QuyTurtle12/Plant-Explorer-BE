@@ -154,6 +154,14 @@ namespace Plant_Explorer.Services.Services
                 if (roleName != null) userModel.Role = roleName;
                 if (avatarImageUrl != null) userModel.AvatarUrl = avatarImageUrl;
 
+                // Get the number of quiz that the child has done
+                if (roleName == "Children")
+                {
+                    int NumberOfQuiz = _unitOfWork.GetRepository<QuizAttempt>().Entities.Where(qa => qa.UserId == item.Id).Count();
+
+                    userModel.NumberOfQuizAttempt = NumberOfQuiz;
+                }
+
                 // Format audit fields
                 userModel.CreatedTime = item.CreatedTime.ToString("dd-MM-yyyy");
                 userModel.LastUpdatedTime = item.LastUpdatedTime.ToString("dd-MM-yyyy");
@@ -199,6 +207,14 @@ namespace Plant_Explorer.Services.Services
             // Assign entities attributes that cannot auto mapping to view model 
             if (roleName != null) result.Role = roleName;
             if (avatarImageUrl != null) result.AvatarUrl = avatarImageUrl;
+
+            // Get the number of quiz that the child has done
+            if (roleName == "Children")
+            {
+                int NumberOfQuiz = _unitOfWork.GetRepository<QuizAttempt>().Entities.Where(qa => qa.UserId == user.Id).Count();
+
+                result.NumberOfQuizAttempt = NumberOfQuiz;
+            }
 
             // Format audit fields
             result.CreatedTime = user.CreatedTime.ToString("dd-MM-yyyy");

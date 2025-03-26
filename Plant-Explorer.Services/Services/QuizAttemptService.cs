@@ -67,13 +67,15 @@ public class QuizAttemptService : IQuizAttemptService
         }
 
         // Get list of quiz attempts
-        IQueryable<QuizAttempt> query = _unitOfWork.GetRepository<QuizAttempt>().Entities;
+        IQueryable<QuizAttempt> query = _unitOfWork.GetRepository<QuizAttempt>().Entities
+                                                .Include(qa => qa.Quiz)
+                                                .Include(qa => qa.User);
 
         // Check if user want to filter by userId
         if (!string.IsNullOrWhiteSpace(userId))
         {
             // Filter by user id
-            query = query.Where(qa => qa.UserId.Equals(userId));
+            query = query.Where(qa => qa.UserId.Equals(Guid.Parse(userId)));
         }
 
         // Check if user want to filter by quizId
@@ -101,6 +103,11 @@ public class QuizAttemptService : IQuizAttemptService
             // Map QuizAttempt to ModelView in order to filter unnecessary data 
             GetQuizAttemptModel quizAttemptModel = _mapper.Map<GetQuizAttemptModel>(item);
 
+            // Assign the rest attributes
+            quizAttemptModel.ChildId = (Guid)item.UserId!;
+            quizAttemptModel.ChildName = item.User?.Name ?? "";
+            quizAttemptModel.QuizName = item.Quiz?.Name ?? "";
+
             // Format audit fields
             quizAttemptModel.CreatedTime = item.CreatedTime?.ToString("dd-MM-yyyy");
             quizAttemptModel.LastUpdatedTime = item.LastUpdatedTime?.ToString("dd-MM-yyyy");
@@ -121,12 +128,23 @@ public class QuizAttemptService : IQuizAttemptService
 
     public async Task<GetQuizAttemptModel> GetQuizAttemptByIdAsync(string id)
     {
-        QuizAttempt? quizAttempt = await _unitOfWork.GetRepository<QuizAttempt>().GetByIdAsync(Guid.Parse(id));
+        QuizAttempt? quizAttempt = await _unitOfWork.GetRepository<QuizAttempt>()
+                                                .Entities
+                                                .Where(qa => qa.Id.Equals(Guid.Parse(id)))
+                                                .Include(qa => qa.Quiz)
+                                                .Include(qa => qa.User)
+                                                .FirstOrDefaultAsync();
 
         // Validate if quiz attempt is existed
         if (quizAttempt == null || quizAttempt.DeletedTime.HasValue) throw new ErrorException(StatusCodes.Status404NotFound, ResponseCodeConstants.NOT_FOUND, "Quiz attempt not found!");
 
         GetQuizAttemptModel quizAttemptModel = _mapper.Map<GetQuizAttemptModel>(quizAttempt);
+
+
+        // Assign the rest attributes
+        quizAttemptModel.ChildId = (Guid)quizAttempt.UserId!;
+        quizAttemptModel.ChildName = quizAttempt.User?.Name ?? "";
+        quizAttemptModel.QuizName = quizAttempt.Quiz?.Name ?? "";
 
         // Format audit fields
         quizAttemptModel.CreatedTime = quizAttempt.CreatedTime?.ToString("dd-MM-yyyy");
