@@ -9,7 +9,7 @@ namespace Plant_Explorer.Controllers
     /// Controller for managing plant applications.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/plant-applications")]
     public class PlantApplicationController : ControllerBase
     {
         private readonly IPlantApplicationService _plantApplicationService;

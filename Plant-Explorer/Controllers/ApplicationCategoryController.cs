@@ -9,7 +9,7 @@ namespace Plant_Explorer.Controllers
     /// Controller for managing application categories.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/application-category")]
     public class ApplicationCategoryController : ControllerBase
     {
         private readonly IApplicationCategoryService _service;

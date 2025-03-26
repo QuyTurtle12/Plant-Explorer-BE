@@ -6,7 +6,7 @@ namespace Plant_Explorer.Controllers
     /// <summary>
     /// Controller for handling scan history related operations.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/scan-histories")]
     [ApiController]
     public class ScanHistoryController : ControllerBase
     {

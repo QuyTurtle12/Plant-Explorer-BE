@@ -7,7 +7,7 @@ namespace Plant_Explorer.Controllers
     /// <summary>
     /// Controller for managing plants.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/plants")]
     [ApiController]
     public class PlantsController : ControllerBase
     {
