@@ -10,7 +10,7 @@ namespace Plant_Explorer.Contract.Services.Interface
     public interface IPlantCharacteristicService
     {
         Task<IEnumerable<PlantCharacteristicGetModel>> GetAllCharacteristicsAsync();
-        Task<PlantCharacteristicGetModel?> GetCharacteristicByIdAsync(Guid id);
+        Task<IEnumerable<PlantCharacteristicGetModel>> GetCharacteristicByIdAsync(Guid id);
         Task<PlantCharacteristicGetModel> CreateCharacteristicAsync(PlantCharacteristicPostModel model);
         Task<PlantCharacteristicGetModel?> UpdateCharacteristicAsync(Guid id, PlantCharacteristicPutModel model);
         Task<bool> DeleteCharacteristicAsync(Guid id);

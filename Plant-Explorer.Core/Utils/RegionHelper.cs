@@ -14,10 +14,8 @@
             "South America",
             "Europe",
             "Asia",
-            "Oceania",
             "Middle East",
             "Central America",
-            "Caribbean",
             "Central Asia",
             "Southeast Asia",
             "East Asia",
@@ -40,12 +38,8 @@
             string[] habitats = new string[]
             {
                 "Forest",
-                "Desert",
                 "Wetlands",
                 "Grassland",
-                "Tundra",
-                "Freshwater",
-                "Marine",
                 "Mountain",
                 "Savanna",
                 "Rainforest"

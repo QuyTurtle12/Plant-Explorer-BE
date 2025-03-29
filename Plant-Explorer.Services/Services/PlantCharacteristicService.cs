@@ -31,18 +31,28 @@ namespace Plant_Explorer.Services.Services
 
             return result;
         }
-        public async Task<PlantCharacteristicGetModel?> GetCharacteristicByIdAsync(Guid id)
+        public async Task<IEnumerable<PlantCharacteristicGetModel>?> GetCharacteristicByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid characteristic ID");
 
-            PlantCharacteristic? characteristic = await _unitOfWork.GetRepository<PlantCharacteristic>().GetByIdAsync(id);
+            IEnumerable<PlantCharacteristic> characteristic = await _unitOfWork.GetRepository<PlantCharacteristic>().Entities
+                                                                   .Where(pc => pc.PlantId.Equals(id))
+                                                                   .Include(pc => pc.Plant)
+                                                                   .Include(pc => pc.CharacteristicCategory)
+                                                                   .ToListAsync();
 
+            IEnumerable<PlantCharacteristicGetModel> resultList = characteristic.Select(item => {
 
-            PlantCharacteristicGetModel result = _mapper.Map<PlantCharacteristicGetModel>(characteristic);
-            await AssignPlantNameCharacteristicNameToGetModel(result);
+                PlantCharacteristicGetModel result = _mapper.Map<PlantCharacteristicGetModel>(item);
 
-            return result;
+                result.PlantName = item.Plant.Name;
+                result.CharacteristicName = item.CharacteristicCategory.Name;
+
+                return result;
+            }).ToList();
+
+            return resultList;
         }
 
         public async Task<PlantCharacteristicGetModel> CreateCharacteristicAsync(PlantCharacteristicPostModel model)

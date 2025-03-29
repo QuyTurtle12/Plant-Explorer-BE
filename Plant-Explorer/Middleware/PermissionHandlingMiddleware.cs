@@ -59,7 +59,7 @@ namespace Plant_Explorer.Middleware
                         ,   "/api/plants"
                         ,   "/api/favorite-plant"
                         ,   "/api/quizzes"
-                        ,   "/api/user-points/current-point"
+                        ,   "/api/user-points"
                         ,   "/api/user-badges"
                         ,   "/api/avatars"
                         ,   "/api/plant-images"

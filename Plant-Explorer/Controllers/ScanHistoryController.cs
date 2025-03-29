@@ -36,16 +36,15 @@ namespace Plant_Explorer.Controllers
             {
                 if (file == null || file.Length == 0)
                     return BadRequest("No file uploaded.");
-
+                Console.WriteLine("Take image success");
                 var result = await _scanHistoryService.IdentifyPlantAsync(file);
                 if (result == null)
                     return BadRequest("Failed to identify plant");
-
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(500, "Failed to identify plant");
+                return StatusCode(500, "Failed to identify plant" + e.Message);
             }
         }
 
@@ -60,7 +59,7 @@ namespace Plant_Explorer.Controllers
         {
             string? userId = _tokenService.GetCurrentUserId();
             if (userId == null) return StatusCode(401, "Not authorized");
-
+            
             try
             {
                 var (plant, scanHistory) = await _scanHistoryService.GetPlantInfoAsync(cacheKey, Guid.Parse(userId));
