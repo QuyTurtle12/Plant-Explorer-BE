@@ -32,17 +32,28 @@ namespace Plant_Explorer.Services.Services
             return result;
         }
 
-        public async Task<PlantApplicationGetModel?> GetByIdAsync(Guid id)
+        public async Task<IEnumerable<PlantApplicationGetModel>?> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid ID");
 
-            PlantApplication application = await _unitOfWork.GetRepository<PlantApplication>().GetByIdAsync(id);
+            IEnumerable<PlantApplication> applicationList = await _unitOfWork.GetRepository<PlantApplication>().Entities
+                                                                                .Where(pa => pa.PlantId.Equals(id))
+                                                                                .Include(pa => pa.Plant)
+                                                                                .Include(pa => pa.ApplicationCategory)
+                                                                                .ToListAsync();
 
-            PlantApplicationGetModel result = _mapper.Map<PlantApplicationGetModel>(application);
-            await AssignPlantNameApplicationNameToGetModel(result);
-            return result;
+            IEnumerable<PlantApplicationGetModel> resultList = applicationList.Select(item =>
+            {
+                PlantApplicationGetModel result = _mapper.Map<PlantApplicationGetModel>(item);
 
+                result.PlantName = item.Plant!.Name;
+                result.ApplicationCategoryName = item.ApplicationCategory!.Name;
+
+                return result;
+            }).ToList();
+            
+            return resultList;
         }
 
         public async Task<PlantApplicationGetModel> CreateAsync(PlantApplicationPostModel model)

@@ -36,10 +36,10 @@ namespace Plant_Explorer.Controllers
         }
 
         /// <summary>
-        /// Gets a plant characteristic by ID.
+        /// Gets a plant characteristic by Plant ID.
         /// </summary>
-        /// <param name="id">The ID of the plant characteristic.</param>
-        /// <returns>The plant characteristic with the specified ID.</returns>
+        /// <param name="id">The ID of the plant.</param>
+        /// <returns>The list of plant characteristic.</returns>
         [HttpGet]
         [Route("/api/plant-characteristics/{id}")]
         public async Task<IActionResult> GetById(Guid id)

@@ -35,10 +35,10 @@ namespace Plant_Explorer.Controllers
         }
 
         /// <summary>
-        /// Gets a plant application by ID.
+        /// Gets a plant application by Plant ID.
         /// </summary>
-        /// <param name="id">The ID of the plant application.</param>
-        /// <returns>The plant application with the specified ID.</returns>
+        /// <param name="id">The ID of the plant.</param>
+        /// <returns>The list of plant application.</returns>
         [HttpGet]
         [Route("/api/plant-applications/{id}")]
         public async Task<ActionResult<PlantApplicationGetModel>> GetById(Guid id)
